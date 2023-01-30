@@ -11,12 +11,15 @@ public class PersonsDbContext : DbContext
 
 	}
 
-	public DbSet<Person> Persons { get; set; }
 	public DbSet<City> Cities { get; set; }
+	public DbSet<Person> Persons { get; set; }
+	public DbSet<RelatedPerson> RelatedPersons { get; set; }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		base.OnModelCreating(modelBuilder);
-		DomainConfigurationManager.Execute(modelBuilder);
+
+		modelBuilder.ConfigureEntities();
+		modelBuilder.SeedDefaultData();
 	}
 }

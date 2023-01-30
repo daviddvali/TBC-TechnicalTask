@@ -2,7 +2,9 @@
 
 public class RelatedPerson
 {
-	public int Id { get; set; }
-	public Person Source { get; set; }
-	public Person Destination { get; set; }
+	public int FromId { get; set; }
+	public int ToId { get; set; }
+
+	public Person From { get; set; }
+	public Person To { get; set; }
 }

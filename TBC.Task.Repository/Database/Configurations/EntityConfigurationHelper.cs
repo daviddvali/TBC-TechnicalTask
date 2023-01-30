@@ -3,9 +3,9 @@ using TBC.Task.Repository.Database.Interfaces;
 
 namespace TBC.Task.Repository.Database.Configurations;
 
-internal static class DomainConfigurationManager
+internal static class EntityConfigurationHelper
 {
-	public static void Execute(ModelBuilder modelBuilder)
+	public static void ConfigureEntities(this ModelBuilder modelBuilder)
 	{
 		var configurationType = typeof(IEntityConfiguration);
 		_ = (
