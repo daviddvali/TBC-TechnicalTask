@@ -23,14 +23,6 @@ internal class CityConfiguration : IEntityConfiguration
 			.HasMaxLength(30)
 			.IsRequired();
 
-		//table.CheckConstraint("CK_City_Name", $"LEN({nameof(City.Name)}) >= 3");
-		//table.CheckConstraint("CK_Person_FirstName", $"LEN({nameof(Person.FirstName)}) >= 2");
-		//table.CheckConstraint("CK_Person_LastName", $"LEN({nameof(Person.LastName)}) >= 2");
-		//table.CheckConstraint("CK_Person_PersonalNumber", $"LEN({nameof(Person.PersonalNumber)}) = 11");
-		//table.CheckConstraint("CK_Person_ContactInfo_MobilePhone", $"LEN({nameof(ContactInfo)}_{nameof(ContactInfo.MobilePhone)}) >= 4");
-		//table.CheckConstraint("CK_Person_ContactInfo_WorkPhone", $"LEN({nameof(ContactInfo)}_{nameof(ContactInfo.WorkPhone)}) >= 4");
-		//table.CheckConstraint("CK_Person_ContactInfo_HomePhone", $"LEN({nameof(ContactInfo)}_{nameof(ContactInfo.HomePhone)}) >= 4");
-
 		return true;
 	}
 }
