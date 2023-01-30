@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TBC.Task.Dependency.Configuration\TBC.Task.Dependency.Configuration.csproj" />
+    <ProjectReference Include="..\TBC.Task.Domain\TBC.Task.Domain.csproj" />
+    <ProjectReference Include="..\TBC.Task.Helpers\TBC.Task.Helpers.csproj" />
+    <ProjectReference Include="..\TBC.Task.Repository\TBC.Task.Repository.csproj" />
+    <ProjectReference Include="..\TBC.Task.Service\TBC.Task.Service.csproj" />
+  </ItemGroup>
+
+</Project>
