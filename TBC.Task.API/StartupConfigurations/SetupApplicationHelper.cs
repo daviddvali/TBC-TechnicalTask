@@ -1,6 +1,6 @@
 ﻿namespace TBC.Task.API.StartupConfigurations;
 
-public static class SetupApplicationConfiguration
+internal static class SetupApplicationHelper
 {
 	public static WebApplication SetupApplication(this WebApplication app)
 	{

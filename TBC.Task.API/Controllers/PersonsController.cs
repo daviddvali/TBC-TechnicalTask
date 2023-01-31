@@ -1,5 +1,5 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 using TBC.Task.API.Models;
 using TBC.Task.Domain;
 using TBC.Task.Domain.Interfaces.Services;
@@ -57,13 +57,17 @@ public class PersonsController : ControllerBase
 	public IActionResult Create(PersonModel model)
 	{
 		Person person = _mapper.Map<Person>(model);
+		int? id = _personService.Insert(person);
 
-		return Ok(new { id = 0 });
+		return Ok(new { id = id });
 	}
 
 	[HttpPut]
 	public IActionResult Update(int id, PersonModel model)
 	{
+		Person person = _mapper.Map<Person>(model);
+		person.Id = id;
+		_personService.Update(person);
 
 		return NoContent();
 	}
@@ -71,7 +75,24 @@ public class PersonsController : ControllerBase
 	[HttpDelete("{id:int}")]
 	public IActionResult Delete(int id)
 	{
+		_personService.Delete(id);
 
 		return NoContent();
+	}
+
+	[HttpPost]
+	[Route("AddRelatedPerson/{from:int}/{to:int}")]
+	public ActionResult<IEnumerable<Person>> Search(int from, int to)
+	{
+
+		return Ok();
+	}
+
+	[HttpPost]
+	[Route("UploadPhoto")]
+	public ActionResult<IEnumerable<Person>> UploadPhoto(int id)
+	{
+
+		return Ok();
 	}
 }

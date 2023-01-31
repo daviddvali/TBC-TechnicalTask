@@ -7,7 +7,7 @@ using TBC.Task.Service;
 
 namespace TBC.Task.API.StartupConfigurations;
 
-public static class RegisterStartupServices
+internal static class RegisterStartupHelper
 {
     public static WebApplicationBuilder RegisterServices(this WebApplicationBuilder builder)
     {
