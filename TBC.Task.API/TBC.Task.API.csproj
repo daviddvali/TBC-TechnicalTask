@@ -22,4 +22,8 @@
     <ProjectReference Include="..\TBC.Task.Service\TBC.Task.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Uploads\Photos\" />
+  </ItemGroup>
+
 </Project>
