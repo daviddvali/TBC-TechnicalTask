@@ -8,7 +8,7 @@ public interface IService<TEntity>
 	IEnumerable<TEntity> Set(Expression<Func<TEntity, bool>> predicate);
 	IEnumerable<TEntity> Set();
 
-	void Insert(TEntity entity);
+	int? Insert(TEntity entity);
 	void Update(TEntity entity);
 	void Delete(object id);
 	void Delete(TEntity entity);

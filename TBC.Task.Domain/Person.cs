@@ -1,9 +1,10 @@
 ﻿using TBC.Task.Domain.ComplexTypes;
 using TBC.Task.Domain.Enumerations;
+using TBC.Task.Domain.Interfaces.Entities;
 
 namespace TBC.Task.Domain;
 
-public class Person
+public class Person : IEntitiy
 {
 	public int Id { get; set; }
 	public string FirstName { get; set; } = null!;
@@ -13,6 +14,7 @@ public class Person
 	public DateTime BirthDate { get; set; }
 	public ContactInfo? ContactInfo { get; set; }
 	public string? Photo { get; set; }
+	public int? CityId { get; set; }
 	public City? City { get; set; }
 
 	public ICollection<RelatedPerson>? RelatedTo { get; set; }
