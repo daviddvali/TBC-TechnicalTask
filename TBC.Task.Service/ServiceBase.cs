@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using TBC.Task.Domain.Interfaces.Entities;
 using TBC.Task.Domain.Interfaces.Repositories;
 using TBC.Task.Domain.Interfaces.Services;
 
@@ -22,10 +23,12 @@ public abstract class ServiceBase<TEntity, TRepository> : IService<TEntity>
 	public IEnumerable<TEntity> Set() =>
 		_repository.Set();
 
-	public virtual void Insert(TEntity entity)
+	public virtual int? Insert(TEntity entity)
 	{
 		_repository.Insert(entity);
 		_repository.SaveChanges();
+		
+		return entity is IEntitiy entityWithId ? entityWithId.Id : null;
 	}
 
 	public virtual void Update(TEntity entity)
