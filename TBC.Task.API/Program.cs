@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using TBC.Task.Domain.Interfaces.Repositories;
+using TBC.Task.Domain.Interfaces.Services;
 using TBC.Task.Repository;
+using TBC.Task.Repository.Database;
+using TBC.Task.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -10,6 +14,14 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<PersonsDbContext>(options =>
 	options.UseSqlServer(configuration.GetConnectionString("TbcPersons")));
+
+builder.Services.AddTransient<ICityRepository, CityRepository>();
+builder.Services.AddTransient<IPersonRepository, PersonRepository>();
+builder.Services.AddTransient<IRelatedPersonRepository, RelatedPersonRepository>();
+
+builder.Services.AddTransient<ICityService, CityService>();
+builder.Services.AddTransient<IPersonService, PersonService>();
+builder.Services.AddTransient<IRelatedPersonService, RelatedPersonService>();
 
 var app = builder.Build();
 
