@@ -3,7 +3,7 @@ using TBC.Task.Repository.Database;
 
 namespace TBC.Task.Repository;
 
-public class PersonRepository : Repository<Person>
+public class PersonRepository : RepositoryBase<Person>
 {
 	public PersonRepository(PersonsDbContext context) : base(context) { }
 }

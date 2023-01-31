@@ -5,12 +5,12 @@ using TBC.Task.Repository.Database;
 
 namespace TBC.Task.Repository;
 
-public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+public abstract class RepositoryBase<TEntity> : IRepository<TEntity> where TEntity : class
 {
-	protected readonly PersonsDbContext _context;
-	protected readonly DbSet<TEntity> _dbSet;
+	private readonly PersonsDbContext _context;
+	private readonly DbSet<TEntity> _dbSet;
 
-	public Repository(PersonsDbContext context)
+	protected RepositoryBase(PersonsDbContext context)
 	{
 		_context = context ?? throw new ArgumentNullException(nameof(context));
 		_dbSet = context.Set<TEntity>();
