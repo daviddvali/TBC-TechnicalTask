@@ -2,5 +2,5 @@
 
 public interface IPersonRepository : IRepository<Person>
 {
-
+	Person GetIncludeCity(int id);
 }

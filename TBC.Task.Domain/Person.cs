@@ -13,6 +13,7 @@ public class Person : IEntitiy
 	public GenderType? Gender { get; set; }
 	public DateTime BirthDate { get; set; }
 	public ContactInfo? ContactInfo { get; set; }
+	public string? PhotoPath { get; set; }
 	public string? PhotoUrl { get; set; }
 	public int? CityId { get; set; }
 	public City? City { get; set; }

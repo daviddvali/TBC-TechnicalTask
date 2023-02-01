@@ -2,5 +2,5 @@
 
 public interface IRelatedPersonRepository : IRepository<RelatedPerson>
 {
-
+	IEnumerable<Person> GetRelatedPersons(int id);
 }

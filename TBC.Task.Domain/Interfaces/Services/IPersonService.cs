@@ -2,5 +2,5 @@
 
 public interface IPersonService : IService<Person>
 {
-
+	Person GetIncludeCity(int id);
 }
