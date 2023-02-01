@@ -8,7 +8,7 @@ namespace TBC.Task.Repository;
 public abstract class RepositoryBase<TEntity> : IRepository<TEntity> where TEntity : class
 {
 	private readonly PersonsDbContext _context;
-	private readonly DbSet<TEntity> _dbSet;
+	protected readonly DbSet<TEntity> _dbSet;
 
 	protected RepositoryBase(PersonsDbContext context)
 	{

@@ -9,7 +9,7 @@ public abstract class ServiceBase<TEntity, TRepository> : IService<TEntity>
 	where TEntity : class
 	where TRepository : IRepository<TEntity>
 {
-	private readonly TRepository _repository;
+	protected readonly TRepository _repository;
 
 	protected ServiceBase(TRepository repository) =>
 		_repository = repository;

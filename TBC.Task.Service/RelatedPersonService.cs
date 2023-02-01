@@ -7,4 +7,8 @@ namespace TBC.Task.Service;
 public class RelatedPersonService : ServiceBase<RelatedPerson, IRelatedPersonRepository>, IRelatedPersonService
 {
 	public RelatedPersonService(IRelatedPersonRepository repository) : base(repository) { }
+	
+	public int GetRelatedPersonsCount(int id) => _repository.Set(x => x.FromId == id).Count();
+
+	public IEnumerable<Person> GetRelatedPersons(int id) => _repository.GetRelatedPersons(id);
 }

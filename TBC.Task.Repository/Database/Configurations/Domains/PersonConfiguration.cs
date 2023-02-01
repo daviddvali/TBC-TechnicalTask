@@ -31,6 +31,10 @@ internal class PersonConfiguration : IEntityConfiguration
 			.HasColumnType("char")
 			.IsRequired();
 		_modelBuilder.Entity<Person>()
+			.Property(e => e.PhotoPath)
+			.HasMaxLength(250)
+			.HasColumnType("varchar");
+		_modelBuilder.Entity<Person>()
 			.Property(e => e.PhotoUrl)
 			.HasMaxLength(250)
 			.HasColumnType("varchar");
