@@ -76,7 +76,7 @@ namespace TBC.Task.Repository.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("BirthDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<int?>("CityId")
                         .HasColumnType("int");
@@ -97,15 +97,17 @@ namespace TBC.Task.Repository.Migrations
                     b.Property<string>("PersonalNumber")
                         .IsRequired()
                         .HasMaxLength(11)
-                        .HasColumnType("nvarchar(11)");
+                        .HasColumnType("char");
 
-                    b.Property<string>("Photo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("PhotoUrl")
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CityId");
+
+                    b.HasIndex("FirstName", "LastName", "PersonalNumber");
 
                     b.ToTable("Persons");
                 });
@@ -138,15 +140,15 @@ namespace TBC.Task.Repository.Migrations
 
                             b1.Property<string>("HomePhone")
                                 .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)");
+                                .HasColumnType("varchar");
 
                             b1.Property<string>("MobilePhone")
                                 .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)");
+                                .HasColumnType("varchar");
 
                             b1.Property<string>("WorkPhone")
                                 .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)");
+                                .HasColumnType("varchar");
 
                             b1.HasKey("PersonId");
 
@@ -158,8 +160,7 @@ namespace TBC.Task.Repository.Migrations
 
                     b.Navigation("City");
 
-                    b.Navigation("ContactInfo")
-                        .IsRequired();
+                    b.Navigation("ContactInfo");
                 });
 
             modelBuilder.Entity("TBC.Task.Domain.RelatedPerson", b =>

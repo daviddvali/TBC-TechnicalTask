@@ -28,19 +28,31 @@ internal class PersonConfiguration : IEntityConfiguration
 		_modelBuilder.Entity<Person>()
 			.Property(e => e.PersonalNumber)
 			.HasMaxLength(11)
+			.HasColumnType("char")
 			.IsRequired();
 		_modelBuilder.Entity<Person>()
+			.Property(e => e.PhotoUrl)
+			.HasMaxLength(250)
+			.HasColumnType("varchar");
+		_modelBuilder.Entity<Person>()
 			.Property(e => e.BirthDate)
+			.HasColumnType("date")
 			.IsRequired();
 		_modelBuilder.Entity<Person>(e => e.OwnsOne(c => c.ContactInfo)
-			.Property(e => e.MobilePhone)
-			.HasMaxLength(50));		
+			.Property(p => p.MobilePhone)
+			.HasMaxLength(50)
+			.HasColumnType("varchar"));
 		_modelBuilder.Entity<Person>(e => e.OwnsOne(c => c.ContactInfo)
-			.Property(e => e.WorkPhone)
-			.HasMaxLength(50));
+			.Property(p => p.WorkPhone)
+			.HasMaxLength(50)
+			.HasColumnType("varchar"));
 		_modelBuilder.Entity<Person>(e => e.OwnsOne(c => c.ContactInfo)
-			.Property(e => e.HomePhone)
-			.HasMaxLength(50));
+			.Property(p => p.HomePhone)
+			.HasMaxLength(50)
+			.HasColumnType("varchar"));
+
+		_modelBuilder.Entity<Person>()
+			.HasIndex(e => new { e.FirstName, e.LastName, e.PersonalNumber });
 
 		return true;
 	}

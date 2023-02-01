@@ -26,7 +26,7 @@ namespace TBC.Task.Repository.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cities", x => x.Id);
-					table.CheckConstraint("CK_City_Name", $"LEN({nameof(City.Name)}) >= 3");
+                    table.CheckConstraint("CK_City_Name", $"LEN({nameof(City.Name)}) >= 3");
 				});
 
             migrationBuilder.CreateTable(
@@ -37,13 +37,13 @@ namespace TBC.Task.Repository.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    PersonalNumber = table.Column<string>(type: "char(11)", maxLength: 11, nullable: false),
                     Gender = table.Column<byte>(type: "tinyint", nullable: true),
-                    PersonalNumber = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ContactInfoMobilePhone = table.Column<string>(name: "ContactInfo_MobilePhone", type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    ContactInfoWorkPhone = table.Column<string>(name: "ContactInfo_WorkPhone", type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    ContactInfoHomePhone = table.Column<string>(name: "ContactInfo_HomePhone", type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Photo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "date", nullable: false),
+                    ContactInfoMobilePhone = table.Column<string>(name: "ContactInfo_MobilePhone", type: "varchar(50)", maxLength: 50, nullable: true),
+                    ContactInfoWorkPhone = table.Column<string>(name: "ContactInfo_WorkPhone", type: "varchar(50)", maxLength: 50, nullable: true),
+                    ContactInfoHomePhone = table.Column<string>(name: "ContactInfo_HomePhone", type: "varchar(50)", maxLength: 50, nullable: true),
+                    PhotoUrl = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: true),
                     CityId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -60,7 +60,7 @@ namespace TBC.Task.Repository.Migrations
                     table.CheckConstraint("CK_Person_ContactInfo_MobilePhone", $"LEN({nameof(ContactInfo)}_{nameof(ContactInfo.MobilePhone)}) >= 4");
                     table.CheckConstraint("CK_Person_ContactInfo_WorkPhone", $"LEN({nameof(ContactInfo)}_{nameof(ContactInfo.WorkPhone)}) >= 4");
                     table.CheckConstraint("CK_Person_ContactInfo_HomePhone", $"LEN({nameof(ContactInfo)}_{nameof(ContactInfo.HomePhone)}) >= 4");
-                });
+				});
 
             migrationBuilder.CreateTable(
                 name: "RelatedPersons",
@@ -100,6 +100,11 @@ namespace TBC.Task.Repository.Migrations
                 name: "IX_Persons_CityId",
                 table: "Persons",
                 column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Persons_FirstName_LastName_PersonalNumber",
+                table: "Persons",
+                columns: new[] { "FirstName", "LastName", "PersonalNumber" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_RelatedPersons_ToId",
