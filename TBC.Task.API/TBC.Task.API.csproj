@@ -22,7 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\TBC.Task.Dependency.Configuration\TBC.Task.Dependency.Configuration.csproj" />
     <ProjectReference Include="..\TBC.Task.Domain\TBC.Task.Domain.csproj" />
-    <ProjectReference Include="..\TBC.Task.Helpers\TBC.Task.Helpers.csproj" />
     <ProjectReference Include="..\TBC.Task.Repository\TBC.Task.Repository.csproj" />
     <ProjectReference Include="..\TBC.Task.Service\TBC.Task.Service.csproj" />
   </ItemGroup>
