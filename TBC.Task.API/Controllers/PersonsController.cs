@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using AutoMapper;
 using TBC.Task.API.Models;
 using TBC.Task.Domain;
 using TBC.Task.Domain.Interfaces.Services;
 using TBC.Task.API.ActionFilters;
+using TBC.Task.API.Resources;
 
 namespace TBC.Task.API.Controllers;
 
@@ -15,13 +17,15 @@ public class PersonsController : ControllerBase
 	private readonly IRelatedPersonService _relatedPersonService;
 	private readonly IMapper _mapper;
 	private readonly IHostEnvironment _environment;
+	private readonly IStringLocalizer<ErrorResources> _errorLocalizer;
 	private readonly ILogger<PersonsController> _logger;
 
 	public PersonsController(
 		IPersonService personService,
 		IRelatedPersonService relatedPersonService,
 		IMapper mapper,
-		IHostEnvironment environment,
+		IHostEnvironment environment, 
+		IStringLocalizer<ErrorResources> errorLocalizer,
 		ILogger<PersonsController> logger)
 	{
 		_personService = personService ?? throw new ArgumentNullException(nameof(personService));
@@ -29,6 +33,7 @@ public class PersonsController : ControllerBase
 		_mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 		_environment = environment ?? throw new ArgumentNullException(nameof(environment));
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		_errorLocalizer = errorLocalizer ?? throw new ArgumentNullException(nameof(errorLocalizer));
 	}
 
 	[HttpPost]
@@ -128,10 +133,8 @@ public class PersonsController : ControllerBase
 	[Route("Photo/{id:int}")]
 	public async Task<IActionResult> GetPhoto(int id)
 	{
-		_logger.LogInformation("LogInformation");
-		_logger.LogDebug("LogDebug");
-		_logger.LogWarning("LogWarning");
-		_logger.LogError("LogWarning");
+		string text = _errorLocalizer["Hello"];
+
 		var person = _personService.Get(id);
 		if (string.IsNullOrEmpty(person.PhotoPath))
 		{

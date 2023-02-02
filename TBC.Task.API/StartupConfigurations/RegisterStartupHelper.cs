@@ -4,6 +4,8 @@ using TBC.Task.Domain.Interfaces.Services;
 using TBC.Task.Repository.Database;
 using TBC.Task.Repository;
 using TBC.Task.Service;
+using TBC.Task.API.Swagger;
+using TBC.Task.API.Serilog;
 
 namespace TBC.Task.API.StartupConfigurations;
 
@@ -16,10 +18,12 @@ internal static class RegisterStartupHelper
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
 
-        builder.ConfigureSwagger();
+		builder.ConfigureSwagger();
         builder.ConfigureLogger();
 
-        builder.Services.AddDbContext<PersonsDbContext>(options =>
+        builder.Services.AddLocalization();
+
+		builder.Services.AddDbContext<PersonsDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("TbcPersons")));
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

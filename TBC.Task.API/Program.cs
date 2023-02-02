@@ -1,3 +1,4 @@
+using TBC.Task.API.Middlewares;
 using TBC.Task.API.StartupConfigurations;
 
 var app = WebApplication
@@ -5,4 +6,5 @@ var app = WebApplication
 	.RegisterServices()
 	.Build();
 
+app.UseMiddleware<SetAcceptLanguageMiddleware>();
 app.SetupApplication().Run();
