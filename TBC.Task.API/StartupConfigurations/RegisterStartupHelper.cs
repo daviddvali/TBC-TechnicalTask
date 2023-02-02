@@ -4,7 +4,6 @@ using TBC.Task.Domain.Interfaces.Services;
 using TBC.Task.Repository.Database;
 using TBC.Task.Repository;
 using TBC.Task.Service;
-using Microsoft.OpenApi.Models;
 
 namespace TBC.Task.API.StartupConfigurations;
 
@@ -17,13 +16,10 @@ internal static class RegisterStartupHelper
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
 
-        builder.Services.AddSwaggerGen();
-		builder.Services.AddSwaggerGen(c =>
-		{
-			c.SwaggerDoc("v1", new OpenApiInfo { Title = "TBC Task API", Version = "v1" });
-		});
+        builder.ConfigureSwagger();
+        builder.ConfigureLogger();
 
-		builder.Services.AddDbContext<PersonsDbContext>(options =>
+        builder.Services.AddDbContext<PersonsDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("TbcPersons")));
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

@@ -3,6 +3,7 @@ using AutoMapper;
 using TBC.Task.API.Models;
 using TBC.Task.Domain;
 using TBC.Task.Domain.Interfaces.Services;
+using TBC.Task.API.ActionFilters;
 
 namespace TBC.Task.API.Controllers;
 
@@ -31,18 +32,20 @@ public class PersonsController : ControllerBase
 	}
 
 	[HttpPost]
+	[ValidatePersonData]
 	public async Task<IActionResult> Create(RequestPersonModel model)
 	{
-		Person person = _mapper.Map<Person>(model);
+		var person = _mapper.Map<Person>(model);
 		var id = _personService.Insert(person);
 
 		return Ok(new { id });
 	}
 
 	[HttpPut]
-	public IActionResult Update(int id, RequestPersonModel model)
+	[ValidatePersonData]
+	public async Task<IActionResult> Update(int id, RequestPersonModel model)
 	{
-		Person person = _mapper.Map<Person>(model);
+		var person = _mapper.Map<Person>(model);
 		person.Id = id;
 		_personService.Update(person);
 
@@ -50,7 +53,7 @@ public class PersonsController : ControllerBase
 	}
 
 	[HttpDelete("{id:int}")]
-	public IActionResult Delete(int id)
+	public async Task<IActionResult> Delete(int id)
 	{
 		_personService.Delete(id);
 
@@ -59,23 +62,22 @@ public class PersonsController : ControllerBase
 
 	[HttpPost]
 	[Route("AddRelatedPerson/{from:int}/{to:int}")]
-	public ActionResult<IEnumerable<Person>> AddRelatedPerson(int from, int to)
+	public async Task<IActionResult> AddRelatedPerson(int from, int to)
 	{
-		RelatedPerson relatedPerson = new() { FromId = from, ToId = to };
-		_relatedPersonService.Insert(relatedPerson);
+		_relatedPersonService.Insert(new RelatedPerson { FromId = from, ToId = to });
 
 		return NoContent();
 	}
 
 	[HttpDelete]
 	[Route("DeleteRelatedPerson/{from:int}/{to:int}")]
-	public ActionResult<IEnumerable<Person>> DeleteRelatedPerson(int from, int to)
+	public async Task<IActionResult> DeleteRelatedPerson(int from, int to)
 	{
 		var relatedPerson = _relatedPersonService
 			.Set(x => x.FromId == from && x.ToId == to)
 			.FirstOrDefault();
 
-		if (relatedPerson == default)
+		if (relatedPerson == null)
 		{
 			return NotFound();
 		}
@@ -87,27 +89,24 @@ public class PersonsController : ControllerBase
 
 	[HttpGet]
 	[Route("RelatedPersonsCount/{id:int}")]
-	public ActionResult<int> GetRelatedPersonsCount(int id)
+	public async Task<IActionResult> GetRelatedPersonsCount(int id)
 	{
-		int relatedPersonsCount = _relatedPersonService.GetRelatedPersonsCount(id);
+		var relatedPersonsCount = _relatedPersonService.GetRelatedPersonsCount(id);
 
 		return Ok(new { relatedPersonsCount });
 	}
 
 	[HttpGet("{id:int}")]
-	public ActionResult<Person?> Get(int id)
+	public async Task<IActionResult> Get(int id)
 	{
 		var person = BuildGetResponse(id);
 
 		return Ok(person);
 	}
-
-
-
-
+	
 	[HttpPost]
 	[Route("UploadPhoto")]
-	public ActionResult<IEnumerable<Person>> UploadPhoto(int id, IFormFile file)
+	public async Task<IActionResult> UploadPhoto(int id, IFormFile file)
 	{
 		if (file.Length == 0)
 		{
@@ -115,45 +114,37 @@ public class PersonsController : ControllerBase
 		}
 		
 		var person = _personService.Get(id);
-		var imageDirectory = Path.Combine(_environment.ContentRootPath, "Uploads", "Photos", id.ToString());
-		var imageFilePath = Path.Combine(imageDirectory, file.FileName);
-
-		if (!Directory.Exists(imageDirectory))
-		{
-			Directory.CreateDirectory(imageDirectory);
-		}
-
-		using (var fileStream = System.IO.File.Create(Path.Combine(imageFilePath)))
-		{
-			file.CopyTo(fileStream);
-			fileStream.Flush();
-		}
+		var imageFilePath = SavePhoto(id, file);
 
 		person.PhotoPath = imageFilePath;
-		person.PhotoUrl = $"{Request.Scheme}://{Request.Host.Value}/Persons/GetPhoto/{person.Id}";
+		person.PhotoUrl = $"/Persons/Photo/{person.Id}";
 		
 		_personService.Update(person);
 
-		return Ok();
+		return NoContent();
 	}
 
 	[HttpGet]
-	[Route("GetPhoto/{id:int}")]
-	public IActionResult GetPhoto(int id)
+	[Route("Photo/{id:int}")]
+	public async Task<IActionResult> GetPhoto(int id)
 	{
+		_logger.LogInformation("LogInformation");
+		_logger.LogDebug("LogDebug");
+		_logger.LogWarning("LogWarning");
+		_logger.LogError("LogWarning");
 		var person = _personService.Get(id);
 		if (string.IsNullOrEmpty(person.PhotoPath))
 		{
 			return NoContent();
 		}
 
-		var data = System.IO.File.ReadAllBytes(person.PhotoPath);         
+		var data = await System.IO.File.ReadAllBytesAsync(person.PhotoPath);         
 		return File(data, "image/jpeg");
 	}
 
 	[HttpGet]
 	[Route("QuickSearch/{keyword}/{currentPage:int}/{pageSize:int?}")]
-	public ActionResult<IEnumerable<Person>> QuickSearch(int keyword, int currentPage, int pageSize = 10)
+	public async Task<ActionResult<IEnumerable<Person>>> QuickSearch(int keyword, int currentPage, int pageSize = 10)
 	{
 
 		return Ok();
@@ -161,7 +152,7 @@ public class PersonsController : ControllerBase
 
 	[HttpGet]
 	[Route("Search/{keyword}/{currentPage:int}/{pageSize:int?}")]
-	public ActionResult<IEnumerable<Person>> Search(int keyword, int currentPage, int pageSize = 10)
+	public async Task<ActionResult<IEnumerable<Person>>> Search(int keyword, int currentPage, int pageSize = 10)
 	{
 
 		return Ok();
@@ -178,6 +169,23 @@ public class PersonsController : ControllerBase
 		response.RelatedTo = relatedPersons.Select(p => _mapper.Map<ResponsePersonModel>(p));
 
 		return response;
+	}
+
+	private string SavePhoto(int id, IFormFile file)
+	{
+		var imageDirectory = Path.Combine(_environment.ContentRootPath, "Uploads", "Photos", id.ToString());
+		var imageFilePath = Path.Combine(imageDirectory, file.FileName);
+
+		if (!Directory.Exists(imageDirectory))
+		{
+			Directory.CreateDirectory(imageDirectory);
+		}
+
+		using var fileStream = System.IO.File.Create(Path.Combine(imageFilePath));
+		file.CopyTo(fileStream);
+		fileStream.Flush();
+
+		return imageFilePath;
 	}
 
 	#endregion

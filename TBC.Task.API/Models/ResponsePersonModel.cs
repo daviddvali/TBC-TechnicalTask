@@ -1,5 +1,4 @@
-﻿using TBC.Task.Domain;
-using TBC.Task.Domain.Enumerations;
+﻿using TBC.Task.Domain.Enumerations;
 
 namespace TBC.Task.API.Models;
 
