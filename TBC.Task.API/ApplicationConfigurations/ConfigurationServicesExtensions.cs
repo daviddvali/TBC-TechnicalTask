@@ -7,9 +7,9 @@ using TBC.Task.Service;
 using TBC.Task.API.Swagger;
 using TBC.Task.API.Serilog;
 
-namespace TBC.Task.API.StartupConfigurations;
+namespace TBC.Task.API.ApplicationConfigurations;
 
-internal static class RegisterStartupHelper
+internal static class ConfigurationServicesExtensions
 {
     public static WebApplicationBuilder RegisterServices(this WebApplicationBuilder builder)
     {

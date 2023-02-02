@@ -4,7 +4,7 @@ using TBC.Task.API.Models;
 
 namespace TBC.Task.API.ActionFilters;
 
-public class ValidatePersonDataAttribute : ActionFilterAttribute
+internal class ValidatePersonDataAttribute : ActionFilterAttribute
 {
 	public override void OnActionExecuting(ActionExecutingContext context)
 	{

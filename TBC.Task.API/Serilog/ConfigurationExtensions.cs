@@ -3,7 +3,7 @@ using Serilog.Exceptions;
 
 namespace TBC.Task.API.Serilog;
 
-internal static class SerilogConfigureExtensions
+internal static class ConfigurationExtensions
 {
     public static void ConfigureLogger(this WebApplicationBuilder builder)
     {

@@ -2,7 +2,7 @@
 
 namespace TBC.Task.API.Swagger;
 
-internal static class SwaggerConfigureExtensions
+internal static class ConfigureExtensions
 {
     public static void ConfigureSwagger(this WebApplicationBuilder builder)
     {

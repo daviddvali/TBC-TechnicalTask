@@ -3,7 +3,7 @@ using TBC.Task.Domain;
 
 namespace TBC.Task.Repository.Database.Configurations;
 
-internal static class DatabaseInitializerHelper
+internal static class DatabaseInitializerExtensions
 {
 	public static void SeedDefaultData(this ModelBuilder modelBuilder) =>
 		modelBuilder.Entity<City>().HasData(

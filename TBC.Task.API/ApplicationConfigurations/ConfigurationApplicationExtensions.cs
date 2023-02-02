@@ -3,13 +3,13 @@ using TBC.Task.API.ExceptionHandler;
 using TBC.Task.API.Localization;
 using ILogger = Serilog.ILogger;
 
-namespace TBC.Task.API.StartupConfigurations;
+namespace TBC.Task.API.ApplicationConfigurations;
 
-internal static class SetupApplicationHelper
+internal static class ConfigurationApplicationExtensions
 {
 	public static WebApplication SetupApplication(this WebApplication app)
 	{
-		ILogger logger = Log.ForContext(typeof(SetupApplicationHelper));
+		ILogger logger = Log.ForContext(typeof(ConfigurationApplicationExtensions));
 
 		if (app.Environment.IsDevelopment())
 		{

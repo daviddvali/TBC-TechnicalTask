@@ -4,7 +4,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace TBC.Task.API.Swagger;
 
-public class AcceptLanguageFilter : IOperationFilter
+internal class AcceptLanguageFilter : IOperationFilter
 {
 	public void Apply(OpenApiOperation operation, OperationFilterContext context)
 	{

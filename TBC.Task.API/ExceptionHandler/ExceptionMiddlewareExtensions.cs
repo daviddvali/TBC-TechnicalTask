@@ -5,7 +5,7 @@ using ILogger = Serilog.ILogger;
 
 namespace TBC.Task.API.ExceptionHandler;
 
-internal static class ExceptionMiddlewareHelper
+internal static class ExceptionMiddlewareExtensions
 {
 	private record ErrorDetails(int StatusCode, string Message)
 	{

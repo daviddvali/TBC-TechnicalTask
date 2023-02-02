@@ -3,7 +3,7 @@ using TBC.Task.Repository.Database.Interfaces;
 
 namespace TBC.Task.Repository.Database.Configurations;
 
-internal static class EntityConfigurationHelper
+internal static class EntityConfigurationExtensions
 {
 	public static void ConfigureEntities(this ModelBuilder modelBuilder)
 	{

@@ -59,6 +59,9 @@ public abstract class RepositoryBase<TEntity> : IRepository<TEntity> where TEnti
 		_dbSet.Remove(entity);
 	}
 
-	public virtual int SaveChanges() =>
+	public int SaveChanges() =>
 		_context.SaveChanges();
+
+	public Task<int> SaveChangesAsync() =>
+		_context.SaveChangesAsync();
 }

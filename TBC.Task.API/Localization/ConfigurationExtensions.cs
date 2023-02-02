@@ -1,6 +1,6 @@
 ﻿namespace TBC.Task.API.Localization;
 
-internal static class LocalizationConfigureExtensions
+internal static class ConfigurationExtensions
 {
     public static void ConfigureLocalization(this WebApplication app)
     {

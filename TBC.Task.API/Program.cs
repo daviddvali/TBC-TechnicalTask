@@ -1,5 +1,5 @@
 using TBC.Task.API.Middlewares;
-using TBC.Task.API.StartupConfigurations;
+using TBC.Task.API.ApplicationConfigurations;
 
 var app = WebApplication
 	.CreateBuilder(args)
