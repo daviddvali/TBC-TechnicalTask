@@ -2,5 +2,6 @@
 
 public class ErrorResources
 {
-
+	public const string FirstNameNotValid = "FirstNameNotValid";
+	public const string LastNameNotValid = "LastNameNotValid";
 }

@@ -6,6 +6,7 @@ using TBC.Task.Repository;
 using TBC.Task.Service;
 using TBC.Task.API.Swagger;
 using TBC.Task.API.Serilog;
+using TBC.Task.API.ActionFilters;
 
 namespace TBC.Task.API.ApplicationConfigurations;
 
@@ -15,7 +16,8 @@ internal static class ConfigurationServicesExtensions
     {
         var configuration = builder.Configuration;
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers(options =>
+	        options.Filters.Add<DataValidationAttribute>());
         builder.Services.AddEndpointsApiExplorer();
 
 		builder.ConfigureSwagger();

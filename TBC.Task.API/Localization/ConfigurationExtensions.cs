@@ -1,14 +1,10 @@
-﻿namespace TBC.Task.API.Localization;
+﻿using Microsoft.Extensions.Localization;
+using TBC.Task.API.Resources;
 
-internal static class ConfigurationExtensions
+namespace TBC.Task.API.Localization;
+
+internal static class LocalizationExtensions
 {
-    public static void ConfigureLocalization(this WebApplication app)
-    {
-        var supportedCultures = new[] { "en-US", "ka-Ge" };
-        var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
-            .AddSupportedCultures(supportedCultures)
-            .AddSupportedUICultures(supportedCultures);
-
-        app.UseRequestLocalization(localizationOptions);
-    }
+    public static string GetLocalized(this IStringLocalizer<ErrorResources> localizer, string key) =>
+	    localizer[key].Value;
 }

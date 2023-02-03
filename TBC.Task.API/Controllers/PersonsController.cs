@@ -37,7 +37,6 @@ public class PersonsController : ControllerBase
 	}
 
 	[HttpPost]
-	[ValidatePersonData]
 	public async Task<IActionResult> Create(RequestPersonModel model)
 	{
 		var person = _mapper.Map<Person>(model);
@@ -47,7 +46,6 @@ public class PersonsController : ControllerBase
 	}
 
 	[HttpPut]
-	[ValidatePersonData]
 	public async Task<IActionResult> Update(int id, RequestPersonModel model)
 	{
 		var person = _mapper.Map<Person>(model);
