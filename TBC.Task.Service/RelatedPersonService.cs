@@ -4,7 +4,7 @@ using TBC.Task.Domain.Interfaces.Services;
 
 namespace TBC.Task.Service;
 
-public class RelatedPersonService : ServiceBase<RelatedPerson, IRelatedPersonRepository>, IRelatedPersonService
+public sealed class RelatedPersonService : ServiceBase<RelatedPerson, IRelatedPersonRepository>, IRelatedPersonService
 {
 	public RelatedPersonService(IRelatedPersonRepository repository) : base(repository) { }
 	

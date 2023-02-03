@@ -4,7 +4,7 @@ using TBC.Task.Repository.Database.Interfaces;
 
 namespace TBC.Task.Repository.Database.Configurations.Domains;
 
-internal class PersonConfiguration : IEntityConfiguration
+internal sealed class PersonConfiguration : IEntityConfiguration
 {
 	private ModelBuilder _modelBuilder;
 
@@ -41,6 +41,8 @@ internal class PersonConfiguration : IEntityConfiguration
 			.Property(e => e.BirthDate)
 			.HasColumnType("date")
 			.IsRequired();
+
+		_modelBuilder.Entity<Person>(e => e.Navigation(p => p.ContactInfo).IsRequired());
 		_modelBuilder.Entity<Person>(e => e.OwnsOne(c => c.ContactInfo)
 			.Property(p => p.MobilePhone)
 			.HasMaxLength(50)

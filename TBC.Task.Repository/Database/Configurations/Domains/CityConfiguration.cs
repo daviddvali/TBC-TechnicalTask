@@ -6,7 +6,7 @@ using TBC.Task.Repository.Database.Interfaces;
 
 namespace TBC.Task.Repository.Database.Configurations.Domains;
 
-internal class CityConfiguration : IEntityConfiguration
+internal sealed class CityConfiguration : IEntityConfiguration
 {
 	private ModelBuilder _modelBuilder;
 

@@ -2,7 +2,7 @@
 
 namespace TBC.Task.API.Models;
 
-public record RequestPersonModel
+public sealed record RequestPersonModel
 {
 	public string FirstName { get; set; } = null!;
 	public string LastName { get; set; } = null!;

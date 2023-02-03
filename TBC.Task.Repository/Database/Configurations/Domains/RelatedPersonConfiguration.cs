@@ -4,7 +4,7 @@ using TBC.Task.Repository.Database.Interfaces;
 
 namespace TBC.Task.Repository.Database.Configurations.Domains;
 
-internal class RelatedPersonConfiguration : IEntityConfiguration
+internal sealed class RelatedPersonConfiguration : IEntityConfiguration
 {
 	private ModelBuilder _modelBuilder;
 

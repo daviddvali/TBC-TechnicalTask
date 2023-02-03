@@ -5,7 +5,7 @@ using TBC.Task.Repository.Database;
 
 namespace TBC.Task.Repository;
 
-public class PersonRepository : RepositoryBase<Person>, IPersonRepository
+public sealed class PersonRepository : RepositoryBase<Person>, IPersonRepository
 {
 	public PersonRepository(PersonsDbContext context) : base(context) { }
 
@@ -29,10 +29,10 @@ public class PersonRepository : RepositoryBase<Person>, IPersonRepository
 			x.LastName.Contains(keyword) ||
 			x.PersonalNumber.Contains(keyword) ||
 			x.BirthDate.ToString("dd.MM.yyy").Contains(keyword) ||
-			x.ContactInfo.MobilePhone.Contains(keyword) ||
-			x.ContactInfo.HomePhone.Contains(keyword) ||
-			x.ContactInfo.WorkPhone.Contains(keyword) ||
-			x.City.Name.Contains(keyword)
+			(x.ContactInfo.MobilePhone ?? string.Empty).Contains(keyword) ||
+			(x.ContactInfo.HomePhone ?? string.Empty).Contains(keyword) ||
+			(x.ContactInfo.WorkPhone ?? string.Empty).Contains(keyword) ||
+			(x.City.Name ?? string.Empty).Contains(keyword)
 		)
 		.Skip((currentPage - 1) * pageSize)
 		.Take(pageSize);

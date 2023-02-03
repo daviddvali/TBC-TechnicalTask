@@ -1,6 +1,6 @@
 ﻿namespace TBC.Task.API.Models;
 
-public class ResponsePersonWithRelatedModel : ResponsePersonModel
+public sealed class ResponsePersonWithRelatedModel : ResponsePersonModel
 {
 	public IEnumerable<ResponsePersonModel>? RelatedTo { get; set; }
 }

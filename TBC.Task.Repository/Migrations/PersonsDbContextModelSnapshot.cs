@@ -164,7 +164,8 @@ namespace TBC.Task.Repository.Migrations
 
                     b.Navigation("City");
 
-                    b.Navigation("ContactInfo");
+                    b.Navigation("ContactInfo")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TBC.Task.Domain.RelatedPerson", b =>

@@ -4,7 +4,7 @@ using TBC.Task.Repository.Database.Configurations;
 
 namespace TBC.Task.Repository.Database;
 
-public class PersonsDbContext : DbContext
+public sealed class PersonsDbContext : DbContext
 {
     public PersonsDbContext(DbContextOptions<PersonsDbContext> options) : base(options)
     {

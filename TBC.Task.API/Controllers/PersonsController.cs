@@ -130,8 +130,6 @@ public class PersonsController : ControllerBase
 	[Route("Photo/{id:int}")]
 	public async Task<IActionResult> GetPhoto(int id)
 	{
-		string text = _errorLocalizer["Hello"];
-
 		var person = _personService.Get(id);
 		if (string.IsNullOrEmpty(person.PhotoPath))
 		{
@@ -146,7 +144,8 @@ public class PersonsController : ControllerBase
 	[Route("QuickSearch/{keyword}/{currentPage:int}/{pageSize:int?}")]
 	public async Task<ActionResult<IEnumerable<Person>>> QuickSearch(string keyword, int currentPage, int pageSize = 10)
 	{
-		var result = _personService.QuickSearch(keyword, currentPage, pageSize)
+		var result = _personService
+			.QuickSearch(keyword, currentPage, pageSize)
 			.Select(p => _mapper.Map<ResponsePersonModel>(p));
 
 		return Ok(result);
@@ -156,10 +155,11 @@ public class PersonsController : ControllerBase
 	[Route("Search/{keyword}/{currentPage:int}/{pageSize:int?}")]
 	public async Task<ActionResult<IEnumerable<Person>>> Search(string keyword, int currentPage, int pageSize = 10)
 	{
-		var result = _personService.QuickSearch(keyword, currentPage, pageSize)
+		var result = _personService
+			.QuickSearch(keyword, currentPage, pageSize)
 			.Select(p => _mapper.Map<ResponsePersonModel>(p));
 
-		return Ok();
+		return Ok(result);
 	}
 
 	#region Private helper methods
