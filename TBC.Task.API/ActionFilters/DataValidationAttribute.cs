@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TBC.Task.API.Models;
 using Microsoft.Extensions.Localization;
+using TBC.Task.API.Extensions;
 using TBC.Task.API.Localization;
 using TBC.Task.API.Resources;
 
@@ -22,11 +23,29 @@ internal class DataValidationAttribute : ActionFilterAttribute
 			context.ActionArguments["model"] is RequestPersonModel)
 		{
 			var person = (RequestPersonModel) context.ActionArguments["model"]!;
-			if (person.FirstName != null)
+			if (!person.IsValid())
 			{
-				context.Result = new BadRequestObjectResult(_localizer.GetLocalized(ErrorResources.FirstNameNotValid));
+				context.Result = new BadRequestObjectResult(
+					string.Join(Environment.NewLine, GetValidationErrorDetails(person)));
 			}
 		}
-		
+	}
+
+	private IEnumerable<string> GetValidationErrorDetails(RequestPersonModel person)
+	{
+		if (!person.IsFirstNameValid()) 
+			yield return _localizer.GetLocalized(ErrorResources.FirstNameNotValid);
+		if (!person.IsLastNameValid()) 
+			yield return _localizer.GetLocalized(ErrorResources.LastNameNotValid);
+		if (!person.IsPersonalNumberValid()) 
+			yield return _localizer.GetLocalized(ErrorResources.PersonalNumberNotValid);
+		if (!person.IsBirthDateValid())
+			yield return _localizer.GetLocalized(ErrorResources.BirthDateNotValid);
+		if (!person.IsMobilePhoneValid()) 
+			yield return _localizer.GetLocalized(ErrorResources.MobilePhoneNotValid);
+		if (!person.IsHomePhoneValid()) 
+			yield return _localizer.GetLocalized(ErrorResources.HomePhoneNotValid);
+		if (!person.IsWorkPhoneValid()) 
+			yield return _localizer.GetLocalized(ErrorResources.WorkPhoneNotValid);
 	}
 }

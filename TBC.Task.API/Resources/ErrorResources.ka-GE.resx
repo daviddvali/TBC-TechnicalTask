@@ -117,7 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Hello" xml:space="preserve">
-    <value>სალამი</value>
+  <data name="BirthDateNotValid" xml:space="preserve">
+    <value>უნდა იყოს მინიმუმ 18 წლის</value>
+  </data>
+  <data name="FirstNameNotValid" xml:space="preserve">
+    <value>სახელი უნდა იყოს მინიმუმ 2 და მაქსიმუმ 50 სიმბოლო, უნდა შეიცავდეს მხოლოდ ქართული ან ლათინური ანბანის ასოებს, არ უნდა შეიცავდეს ერთდროულად ლათინურ და ქართულ ასოებს.</value>
+  </data>
+  <data name="HomePhoneNotValid" xml:space="preserve">
+    <value>სახლის ტელეფონის ნომერი უნდა იყოს მინიმუმ 4 და მაქსიმუმ 50 სიმბოლო.</value>
+  </data>
+  <data name="LastNameNotValid" xml:space="preserve">
+    <value>გვარი უნდა იყოს მინიმუმ 2 და მაქსიმუმ 50 სიმბოლო, უნდა შეიცავდეს მხოლოდ ქართული ან ლათინური ანბანის ასოებს, არ უნდა შეიცავდეს ერთდროულად ლათინურ და ქართულ ასოებს.</value>
+  </data>
+  <data name="MobilePhoneNotValid" xml:space="preserve">
+    <value>მობილური ტელეფონის ნომერი უნდა იყოს მინიმუმ 4 და მაქსიმუმ 50 სიმბოლო.</value>
+  </data>
+  <data name="PersonalNumberNotValid" xml:space="preserve">
+    <value>პირადი ნომერი უნდა იყოს 11 სიმბოლო და შეიცავდეს მხოლოდ ციფრებს</value>
+  </data>
+  <data name="WorkPhoneNotValid" xml:space="preserve">
+    <value>ოფისის ტელეფონის ნომერი უნდა იყოს მინიმუმ 4 და მაქსიმუმ 50 სიმბოლო.</value>
   </data>
 </root>
