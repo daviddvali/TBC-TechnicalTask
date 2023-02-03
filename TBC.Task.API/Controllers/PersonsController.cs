@@ -4,7 +4,6 @@ using AutoMapper;
 using TBC.Task.API.Models;
 using TBC.Task.Domain;
 using TBC.Task.Domain.Interfaces.Services;
-using TBC.Task.API.ActionFilters;
 using TBC.Task.API.Resources;
 
 namespace TBC.Task.API.Controllers;
@@ -145,16 +144,20 @@ public class PersonsController : ControllerBase
 
 	[HttpGet]
 	[Route("QuickSearch/{keyword}/{currentPage:int}/{pageSize:int?}")]
-	public async Task<ActionResult<IEnumerable<Person>>> QuickSearch(int keyword, int currentPage, int pageSize = 10)
+	public async Task<ActionResult<IEnumerable<Person>>> QuickSearch(string keyword, int currentPage, int pageSize = 10)
 	{
+		var result = _personService.QuickSearch(keyword, currentPage, pageSize)
+			.Select(p => _mapper.Map<ResponsePersonModel>(p));
 
-		return Ok();
+		return Ok(result);
 	}
 
 	[HttpGet]
 	[Route("Search/{keyword}/{currentPage:int}/{pageSize:int?}")]
-	public async Task<ActionResult<IEnumerable<Person>>> Search(int keyword, int currentPage, int pageSize = 10)
+	public async Task<ActionResult<IEnumerable<Person>>> Search(string keyword, int currentPage, int pageSize = 10)
 	{
+		var result = _personService.QuickSearch(keyword, currentPage, pageSize)
+			.Select(p => _mapper.Map<ResponsePersonModel>(p));
 
 		return Ok();
 	}

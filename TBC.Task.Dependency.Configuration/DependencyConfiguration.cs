@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TBC.Task.Domain;
-using TBC.Task.Repository;
+using TBC.Task.Repository.Database;
 
 namespace TBC.Task.Dependency.Configuration;
 

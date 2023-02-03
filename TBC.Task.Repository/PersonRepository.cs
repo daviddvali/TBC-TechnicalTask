@@ -13,4 +13,27 @@ public class PersonRepository : RepositoryBase<Person>, IPersonRepository
 		.Where(x => x.Id == id)
 		.Include(x => x.City)
 		.First();
+
+	public IQueryable<Person> QuickSearch(string keyword, int currentPage, int pageSize) => _dbSet
+		.Where(x =>
+			x.FirstName.Contains(keyword) ||
+			x.LastName.Contains(keyword) ||
+			x.PersonalNumber.Contains(keyword))
+		.Skip((currentPage - 1) * pageSize)
+		.Take(pageSize);
+
+	public IQueryable<Person> Search(string keyword, int currentPage, int pageSize) => _dbSet
+		.Include(x => x.City)
+		.Where(x =>
+			x.FirstName.Contains(keyword) ||
+			x.LastName.Contains(keyword) ||
+			x.PersonalNumber.Contains(keyword) ||
+			x.BirthDate.ToString("dd.MM.yyy").Contains(keyword) ||
+			x.ContactInfo.MobilePhone.Contains(keyword) ||
+			x.ContactInfo.HomePhone.Contains(keyword) ||
+			x.ContactInfo.WorkPhone.Contains(keyword) ||
+			x.City.Name.Contains(keyword)
+		)
+		.Skip((currentPage - 1) * pageSize)
+		.Take(pageSize);
 }
