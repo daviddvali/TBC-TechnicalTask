@@ -12,8 +12,8 @@ using TBC.Task.Repository.Database;
 namespace TBC.Task.Repository.Migrations
 {
     [DbContext(typeof(PersonsDbContext))]
-    [Migration("20230201222127_AddPersonPhotoPath")]
-    partial class AddPersonPhotoPath
+    [Migration("20230204210550_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,10 +92,18 @@ namespace TBC.Task.Repository.Migrations
                     b.Property<byte?>("Gender")
                         .HasColumnType("tinyint");
 
+                    b.Property<string>("HomePhone")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("MobilePhone")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar");
 
                     b.Property<string>("PersonalNumber")
                         .IsRequired()
@@ -108,6 +116,10 @@ namespace TBC.Task.Repository.Migrations
 
                     b.Property<string>("PhotoUrl")
                         .HasMaxLength(250)
+                        .HasColumnType("varchar");
+
+                    b.Property<string>("WorkPhone")
+                        .HasMaxLength(50)
                         .HasColumnType("varchar");
 
                     b.HasKey("Id");
@@ -140,34 +152,7 @@ namespace TBC.Task.Repository.Migrations
                         .WithMany()
                         .HasForeignKey("CityId");
 
-                    b.OwnsOne("TBC.Task.Domain.ComplexTypes.ContactInfo", "ContactInfo", b1 =>
-                        {
-                            b1.Property<int>("PersonId")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("HomePhone")
-                                .HasMaxLength(50)
-                                .HasColumnType("varchar");
-
-                            b1.Property<string>("MobilePhone")
-                                .HasMaxLength(50)
-                                .HasColumnType("varchar");
-
-                            b1.Property<string>("WorkPhone")
-                                .HasMaxLength(50)
-                                .HasColumnType("varchar");
-
-                            b1.HasKey("PersonId");
-
-                            b1.ToTable("Persons");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PersonId");
-                        });
-
                     b.Navigation("City");
-
-                    b.Navigation("ContactInfo");
                 });
 
             modelBuilder.Entity("TBC.Task.Domain.RelatedPerson", b =>

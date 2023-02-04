@@ -19,10 +19,10 @@ public abstract class RepositoryBase<TEntity> : IRepository<TEntity> where TEnti
 	public virtual TEntity Get(params object[] id) =>
 		_dbSet.Find(id) ?? throw new KeyNotFoundException($"Record with key {id} not found");
 
-	public IQueryable<TEntity> Set(Expression<Func<TEntity, bool>> predicate) =>
+	public virtual IQueryable<TEntity> Set(Expression<Func<TEntity, bool>> predicate) =>
 		_context.Set<TEntity>().Where(predicate);
 
-	public IQueryable<TEntity> Set() =>
+	public virtual IQueryable<TEntity> Set() =>
 		_context.Set<TEntity>();
 
 	public virtual void Insert(TEntity entity) =>

@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using TBC.Task.Domain;
-using TBC.Task.Domain.ComplexTypes;
 
 #nullable disable
 
@@ -40,9 +39,10 @@ namespace TBC.Task.Repository.Migrations
                     PersonalNumber = table.Column<string>(type: "char(11)", maxLength: 11, nullable: false),
                     Gender = table.Column<byte>(type: "tinyint", nullable: true),
                     BirthDate = table.Column<DateTime>(type: "date", nullable: false),
-                    ContactInfoMobilePhone = table.Column<string>(name: "ContactInfo_MobilePhone", type: "varchar(50)", maxLength: 50, nullable: true),
-                    ContactInfoWorkPhone = table.Column<string>(name: "ContactInfo_WorkPhone", type: "varchar(50)", maxLength: 50, nullable: true),
-                    ContactInfoHomePhone = table.Column<string>(name: "ContactInfo_HomePhone", type: "varchar(50)", maxLength: 50, nullable: true),
+                    MobilePhone = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
+                    WorkPhone = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
+                    HomePhone = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
+                    PhotoPath = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: true),
                     PhotoUrl = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: true),
                     CityId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -57,9 +57,9 @@ namespace TBC.Task.Repository.Migrations
                     table.CheckConstraint("CK_Person_FirstName", $"LEN({nameof(Person.FirstName)}) >= 2");
                     table.CheckConstraint("CK_Person_LastName", $"LEN({nameof(Person.LastName)}) >= 2");
                     table.CheckConstraint("CK_Person_PersonalNumber", $"LEN({nameof(Person.PersonalNumber)}) = 11");
-                    table.CheckConstraint("CK_Person_ContactInfo_MobilePhone", $"LEN({nameof(ContactInfo)}_{nameof(ContactInfo.MobilePhone)}) >= 4");
-                    table.CheckConstraint("CK_Person_ContactInfo_WorkPhone", $"LEN({nameof(ContactInfo)}_{nameof(ContactInfo.WorkPhone)}) >= 4");
-                    table.CheckConstraint("CK_Person_ContactInfo_HomePhone", $"LEN({nameof(ContactInfo)}_{nameof(ContactInfo.HomePhone)}) >= 4");
+                    table.CheckConstraint("CK_Person_MobilePhone", $"LEN({nameof(Person.MobilePhone)}) >= 4");
+                    table.CheckConstraint("CK_Person_WorkPhone", $"LEN({nameof(Person.WorkPhone)}) >= 4");
+                    table.CheckConstraint("CK_Person_HomePhone", $"LEN({nameof(Person.HomePhone)}) >= 4");
 				});
 
             migrationBuilder.CreateTable(
@@ -82,7 +82,8 @@ namespace TBC.Task.Repository.Migrations
                         column: x => x.ToId,
                         principalTable: "Persons",
                         principalColumn: "Id");
-                });
+                    table.CheckConstraint("CK_RelatedPerson_SelfRelationCheck", $"{nameof(RelatedPerson.FromId)} != {nameof(RelatedPerson.ToId)}");
+				});
 
             migrationBuilder.InsertData(
                 table: "Cities",

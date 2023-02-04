@@ -1,14 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TBC.Task.Domain;
-using TBC.Task.Domain.ComplexTypes;
 using TBC.Task.Repository.Database.Interfaces;
 
 namespace TBC.Task.Repository.Database.Configurations.Domains;
 
 internal sealed class CityConfiguration : IEntityConfiguration
 {
-	private ModelBuilder _modelBuilder;
+	private readonly ModelBuilder _modelBuilder;
 
 	public CityConfiguration(ModelBuilder modelBuilder) =>
 		_modelBuilder = modelBuilder ?? throw new ArgumentNullException(nameof(modelBuilder));

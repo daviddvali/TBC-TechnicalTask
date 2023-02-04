@@ -6,7 +6,7 @@ namespace TBC.Task.Repository.Database.Configurations.Domains;
 
 internal sealed class RelatedPersonConfiguration : IEntityConfiguration
 {
-	private ModelBuilder _modelBuilder;
+	private readonly ModelBuilder _modelBuilder;
 
 	public RelatedPersonConfiguration(ModelBuilder modelBuilder) =>
 		_modelBuilder = modelBuilder ?? throw new ArgumentNullException(nameof(modelBuilder));

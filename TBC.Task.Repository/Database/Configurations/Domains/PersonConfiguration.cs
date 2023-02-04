@@ -6,7 +6,7 @@ namespace TBC.Task.Repository.Database.Configurations.Domains;
 
 internal sealed class PersonConfiguration : IEntityConfiguration
 {
-	private ModelBuilder _modelBuilder;
+	private readonly ModelBuilder _modelBuilder;
 
 	public PersonConfiguration(ModelBuilder modelBuilder) =>
 		_modelBuilder = modelBuilder ?? throw new ArgumentNullException(nameof(modelBuilder));
@@ -42,19 +42,18 @@ internal sealed class PersonConfiguration : IEntityConfiguration
 			.HasColumnType("date")
 			.IsRequired();
 
-		_modelBuilder.Entity<Person>(e => e.Navigation(p => p.ContactInfo).IsRequired());
-		_modelBuilder.Entity<Person>(e => e.OwnsOne(c => c.ContactInfo)
-			.Property(p => p.MobilePhone)
+		_modelBuilder.Entity<Person>()
+			.Property(e => e.MobilePhone)
 			.HasMaxLength(50)
-			.HasColumnType("varchar"));
-		_modelBuilder.Entity<Person>(e => e.OwnsOne(c => c.ContactInfo)
-			.Property(p => p.WorkPhone)
+			.HasColumnType("varchar");
+		_modelBuilder.Entity<Person>()
+			.Property(e => e.HomePhone)
 			.HasMaxLength(50)
-			.HasColumnType("varchar"));
-		_modelBuilder.Entity<Person>(e => e.OwnsOne(c => c.ContactInfo)
-			.Property(p => p.HomePhone)
+			.HasColumnType("varchar");
+		_modelBuilder.Entity<Person>()
+			.Property(e => e.WorkPhone)
 			.HasMaxLength(50)
-			.HasColumnType("varchar"));
+			.HasColumnType("varchar");
 
 		_modelBuilder.Entity<Person>()
 			.HasIndex(e => new { e.FirstName, e.LastName, e.PersonalNumber });
