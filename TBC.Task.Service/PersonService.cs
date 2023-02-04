@@ -6,7 +6,23 @@ namespace TBC.Task.Service;
 
 public sealed class PersonService : ServiceBase<Person, IPersonRepository>, IPersonService
 {
-	public PersonService(IPersonRepository repository) : base(repository) { }
+	private readonly IRelatedPersonRepository _relatedPersonRepository;
+
+	public PersonService(IPersonRepository repository, IRelatedPersonRepository relatedPersonRepository) : base(repository)
+	{
+		_relatedPersonRepository = relatedPersonRepository;
+	}
+
+	public override void Delete(Person entity)
+	{
+		var relations = _relatedPersonRepository
+			.Set(x => x.ToId == entity.Id || x.FromId == entity.Id);
+		foreach (var relation in relations)
+		{
+			_relatedPersonRepository.Delete(relation);
+		}
+		base.Delete(entity);
+	}
 
 	public Person GetIncludeCity(int id) => _repository.GetIncludeCity(id);
 

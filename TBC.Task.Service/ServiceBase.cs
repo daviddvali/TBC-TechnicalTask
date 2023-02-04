@@ -17,10 +17,10 @@ public abstract class ServiceBase<TEntity, TRepository> : IService<TEntity>
 	public virtual TEntity Get(params object[] id) =>
 		_repository.Get(id);
 
-	public IEnumerable<TEntity> Set(Expression<Func<TEntity, bool>> predicate) =>
+	public virtual IEnumerable<TEntity> Set(Expression<Func<TEntity, bool>> predicate) =>
 		_repository.Set(predicate);
 
-	public IEnumerable<TEntity> Set() =>
+	public virtual IEnumerable<TEntity> Set() =>
 		_repository.Set();
 
 	public virtual int? Insert(TEntity entity)
