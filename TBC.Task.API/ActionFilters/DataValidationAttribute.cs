@@ -8,7 +8,7 @@ using TBC.Task.API.Resources;
 
 namespace TBC.Task.API.ActionFilters;
 
-internal class DataValidationAttribute : ActionFilterAttribute
+internal sealed class DataValidationAttribute : ActionFilterAttribute
 {
 	private readonly IStringLocalizer<ErrorResources> _localizer;
 

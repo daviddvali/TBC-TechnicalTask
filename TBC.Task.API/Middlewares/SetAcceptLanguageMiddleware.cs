@@ -1,6 +1,6 @@
 ﻿namespace TBC.Task.API.Middlewares;
 
-internal class SetAcceptLanguageMiddleware
+internal sealed class SetAcceptLanguageMiddleware
 {
 	private readonly RequestDelegate _next;
 

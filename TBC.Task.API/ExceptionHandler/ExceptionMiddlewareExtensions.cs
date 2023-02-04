@@ -6,7 +6,6 @@ namespace TBC.Task.API.ExceptionHandler;
 
 internal static partial class ExceptionMiddlewareExtensions
 {
-
 	public static void ConfigureExceptionHandler(this IApplicationBuilder app, ILogger logger)
 	{
 		app.UseExceptionHandler(appError =>
