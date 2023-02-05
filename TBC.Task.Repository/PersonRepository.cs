@@ -9,10 +9,10 @@ public sealed class PersonRepository : RepositoryBase<Person>, IPersonRepository
 {
 	public PersonRepository(PersonsDbContext context) : base(context) { }
 
-	public Person GetIncludeCity(int id) => _dbSet
+	public Person? GetIncludeCity(int id) => _dbSet
 		.Where(x => x.Id == id)
 		.Include(x => x.City)
-		.First();
+		.FirstOrDefault();
 
 	public IQueryable<Person> QuickSearch(string keyword, int currentPage, int pageSize) => _dbSet
 		.Where(x =>

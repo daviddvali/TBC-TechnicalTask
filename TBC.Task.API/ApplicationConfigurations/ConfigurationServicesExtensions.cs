@@ -17,7 +17,11 @@ internal static class ConfigurationServicesExtensions
         var configuration = builder.Configuration;
 
         builder.Services.AddControllers(options =>
-	        options.Filters.Add<DataValidationAttribute>());
+        {
+	        options.Filters.Add<PersonRequestDataValidationAttribute>();
+	        options.Filters.Add<RelatedPersonRequestDataValidationAttribute>();
+	        options.Filters.Add<SearchRequestDataValidationAttribute>();
+        });
         builder.Services.AddEndpointsApiExplorer();
 
 		builder.ConfigureSwagger();

@@ -24,7 +24,7 @@ public static class PersonValidationExtensions
 		Regex.IsMatch(person.PersonalNumber, "^[0-9]{11}$");
 
 	public static bool IsBirthDateValid(this RequestPersonModel person) =>
-		GetAge(person.BirthDate) >= 18;
+		person.BirthDate.HasValue && GetAge(person.BirthDate.Value) >= 18;
 
 	public static bool IsWorkPhoneValid(this RequestPersonModel person) =>
 		person.MobilePhone == null || Regex.IsMatch(person.MobilePhone, @"^.{4,50}$");

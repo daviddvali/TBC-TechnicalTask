@@ -123,6 +123,9 @@
   <data name="FirstNameNotValid" xml:space="preserve">
     <value>The firstname must be a minimum of 2 and a maximum of 50 characters, must contain only letters of the Georgian or Latin alphabet, must not contain both Latin and Georgian letters.</value>
   </data>
+  <data name="FromAndToShouldDifferer" xml:space="preserve">
+    <value>From and to parameters should be different.</value>
+  </data>
   <data name="HomePhoneNotValid" xml:space="preserve">
     <value>The home phone number must be a minimum of 4 and a maximum of 50 characters.</value>
   </data>
@@ -134,6 +137,15 @@
   </data>
   <data name="PersonalNumberNotValid" xml:space="preserve">
     <value>The personal number must be 11 characters long and contain only numbers.</value>
+  </data>
+  <data name="PersonNotFound" xml:space="preserve">
+    <value>The person with such ID not found.</value>
+  </data>
+  <data name="RelationNotFound" xml:space="preserve">
+    <value>The relation not found.</value>
+  </data>
+  <data name="SearchParametersNotValid" xml:space="preserve">
+    <value>The keykord must contain a value, also the current page and page size must be a positive number greater than zero.</value>
   </data>
   <data name="WorkPhoneNotValid" xml:space="preserve">
     <value>The office phone number must be a minimum of 4 and a maximum of 50 characters.</value>

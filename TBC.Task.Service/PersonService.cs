@@ -24,11 +24,13 @@ public sealed class PersonService : ServiceBase<Person, IPersonRepository>, IPer
 		base.Delete(entity);
 	}
 
-	public Person GetIncludeCity(int id) => _repository.GetIncludeCity(id);
+	public Person? GetIncludeCity(int id) => _repository.GetIncludeCity(id);
 
 	public IEnumerable<Person> QuickSearch(string keyword, int currentPage, int pageSize) =>
 		_repository.QuickSearch(keyword, currentPage, pageSize);
 
 	public IEnumerable<Person> Search(string keyword, int currentPage, int pageSize) =>
 		_repository.Search(keyword, currentPage, pageSize);
+
+	public bool Exists(int id) => _repository.Set().Any(x => x.Id == id);
 }

@@ -1,6 +1,6 @@
 ﻿namespace TBC.Task.API.Resources;
 
-public class ErrorResources
+public sealed class ErrorResources
 {
 	public const string FirstNameNotValid = "FirstNameNotValid";
 	public const string LastNameNotValid = "LastNameNotValid";
@@ -9,4 +9,8 @@ public class ErrorResources
 	public const string MobilePhoneNotValid = "MobilePhoneNotValid";
 	public const string HomePhoneNotValid = "HomePhoneNotValid";
 	public const string WorkPhoneNotValid = "WorkPhoneNotValid";
+	public const string PersonNotFound = "PersonNotFound";
+	public const string RelationNotFound = "RelationNotFound";
+	public const string FromAndToShouldDifferer = "FromAndToShouldDifferer";
+	public const string SearchParametersNotValid = "SearchParametersNotValid";
 }

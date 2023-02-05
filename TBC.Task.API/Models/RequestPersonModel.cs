@@ -8,7 +8,7 @@ public sealed record RequestPersonModel
 	public string LastName { get; set; } = null!;
 	public string PersonalNumber { get; set; } = null!;
 	public GenderType? Gender { get; set; }
-	public DateTime BirthDate { get; set; }
+	public DateTime? BirthDate { get; set; }
 	public string? MobilePhone { get; set; }
 	public string? WorkPhone { get; set; }
 	public string? HomePhone { get; set; }
