@@ -41,7 +41,7 @@ public sealed class PersonRepository : RepositoryBase<Person>, IPersonRepository
 			x.FirstName.Contains(keyword) ||
 			x.LastName.Contains(keyword) ||
 			x.PersonalNumber.Contains(keyword) ||
-			((birthDateFrom.HasValue || x.BirthDate >= birthDateFrom) && (birthDateTo.HasValue || x.BirthDate >= birthDateTo)) ||
+			((birthDateFrom.HasValue && x.BirthDate >= birthDateFrom) && (birthDateTo.HasValue && x.BirthDate <= birthDateTo)) ||
 			(x.MobilePhone != null && x.MobilePhone.Contains(keyword)) ||
 			(x.HomePhone != null && x.HomePhone.Contains(keyword)) ||
 			(x.WorkPhone != null && x.WorkPhone.Contains(keyword)) ||
