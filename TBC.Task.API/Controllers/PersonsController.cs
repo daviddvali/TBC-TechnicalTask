@@ -18,7 +18,6 @@ public class PersonsController : ControllerBase
 	private readonly IHostEnvironment _environment;
 	private readonly IStringLocalizer<ErrorResources> _errorLocalizer;
 	private readonly IMapper _mapper;
-	private readonly IStringLocalizer<ErrorResources> _localizer;
 	private readonly IConfiguration _configuration;
 
 	public PersonsController(
@@ -27,15 +26,13 @@ public class PersonsController : ControllerBase
 		IHostEnvironment environment,
 		IStringLocalizer<ErrorResources> errorLocalizer,
 		IMapper mapper,
-		IConfiguration configuration,
-		IStringLocalizer<ErrorResources> localizer)
+		IConfiguration configuration)
 	{
 		_personService = personService ?? throw new ArgumentNullException(nameof(personService));
 		_relatedPersonService = relatedPersonService ?? throw new ArgumentNullException(nameof(relatedPersonService));
 		_environment = environment ?? throw new ArgumentNullException(nameof(environment));
 		_mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 		_errorLocalizer = errorLocalizer ?? throw new ArgumentNullException(nameof(errorLocalizer));
-		_localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
 		_configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 	}
 
@@ -182,7 +179,7 @@ public class PersonsController : ControllerBase
 		string keyword, DateTime? birthDateFrom = null, DateTime? birthDateTo = null, int currentPage = 1, int pageSize = 100)
 	{
 		if (!(birthDateFrom.HasValue && birthDateTo.HasValue || !birthDateFrom.HasValue && !birthDateTo.HasValue))
-			return new BadRequestObjectResult(_localizer.GetLocalized(ErrorResources.DateRangeNotSelected));
+			return new BadRequestObjectResult(_errorLocalizer.GetLocalized(ErrorResources.DateRangeNotSelected));
 
 		var (result, resultTotalCount) = _personService.Search(keyword, birthDateFrom, birthDateTo, currentPage, pageSize);
 

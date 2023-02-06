@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TBC.Task.Domain.Interfaces.Entities;
+﻿using TBC.Task.Domain.Interfaces.Entities;
 
 namespace TBC.Task.Domain;
 
