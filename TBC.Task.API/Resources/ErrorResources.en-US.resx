@@ -120,6 +120,9 @@
   <data name="BirthDateNotValid" xml:space="preserve">
     <value>Must be at least 18 years old.</value>
   </data>
+  <data name="DateRangeNotSelected" xml:space="preserve">
+    <value>You need to specify both from and to dates</value>
+  </data>
   <data name="FirstNameNotValid" xml:space="preserve">
     <value>The firstname must be a minimum of 2 and a maximum of 50 characters, must contain only letters of the Georgian or Latin alphabet, must not contain both Latin and Georgian letters.</value>
   </data>

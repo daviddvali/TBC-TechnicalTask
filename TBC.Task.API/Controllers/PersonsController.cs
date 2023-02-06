@@ -18,8 +18,8 @@ public class PersonsController : ControllerBase
 	private readonly IHostEnvironment _environment;
 	private readonly IStringLocalizer<ErrorResources> _errorLocalizer;
 	private readonly IMapper _mapper;
+	private readonly IStringLocalizer<ErrorResources> _localizer;
 	private readonly IConfiguration _configuration;
-	private readonly ILogger<PersonsController> _logger;
 
 	public PersonsController(
 		IPersonService personService,
@@ -28,14 +28,14 @@ public class PersonsController : ControllerBase
 		IStringLocalizer<ErrorResources> errorLocalizer,
 		IMapper mapper,
 		IConfiguration configuration,
-		ILogger<PersonsController> logger)
+		IStringLocalizer<ErrorResources> localizer)
 	{
 		_personService = personService ?? throw new ArgumentNullException(nameof(personService));
 		_relatedPersonService = relatedPersonService ?? throw new ArgumentNullException(nameof(relatedPersonService));
 		_environment = environment ?? throw new ArgumentNullException(nameof(environment));
 		_mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 		_errorLocalizer = errorLocalizer ?? throw new ArgumentNullException(nameof(errorLocalizer));
-		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		_localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
 		_configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 	}
 
@@ -181,6 +181,9 @@ public class PersonsController : ControllerBase
 	public async Task<ActionResult<IEnumerable<Person>>> Search(
 		string keyword, DateTime? birthDateFrom = null, DateTime? birthDateTo = null, int currentPage = 1, int pageSize = 100)
 	{
+		if (!(birthDateFrom.HasValue && birthDateTo.HasValue || !birthDateFrom.HasValue && !birthDateTo.HasValue))
+			return new BadRequestObjectResult(_localizer.GetLocalized(ErrorResources.DateRangeNotSelected));
+
 		var (result, resultTotalCount) = _personService.Search(keyword, birthDateFrom, birthDateTo, currentPage, pageSize);
 
 		return Ok(new ResponseSearchModel(

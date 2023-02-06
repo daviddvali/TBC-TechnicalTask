@@ -120,6 +120,9 @@
   <data name="BirthDateNotValid" xml:space="preserve">
     <value>უნდა იყოს მინიმუმ 18 წლის</value>
   </data>
+  <data name="DateRangeNotSelected" xml:space="preserve">
+    <value>თქვენ უნდა მიუთითოთ ორივე თარიღი</value>
+  </data>
   <data name="FirstNameNotValid" xml:space="preserve">
     <value>სახელი უნდა იყოს მინიმუმ 2 და მაქსიმუმ 50 სიმბოლო, უნდა შეიცავდეს მხოლოდ ქართული ან ლათინური ანბანის ასოებს, არ უნდა შეიცავდეს ერთდროულად ლათინურ და ქართულ ასოებს.</value>
   </data>

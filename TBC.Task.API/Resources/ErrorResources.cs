@@ -13,4 +13,5 @@ public sealed class ErrorResources
 	public const string RelationNotFound = "RelationNotFound";
 	public const string FromAndToShouldDifferer = "FromAndToShouldDifferer";
 	public const string SearchParametersNotValid = "SearchParametersNotValid";
+	public const string DateRangeNotSelected = "DateRangeNotSelected";
 }
