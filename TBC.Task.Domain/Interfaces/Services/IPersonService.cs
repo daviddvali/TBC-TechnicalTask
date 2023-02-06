@@ -3,7 +3,7 @@
 public interface IPersonService : IService<Person>
 {
 	Person? GetIncludeCity(int id);
-	IEnumerable<Person> QuickSearch(string keyword, int currentPage, int pageSize);
-	IEnumerable<Person> Search(string keyword, int currentPage, int pageSize);
+	(IQueryable<Person>, int) QuickSearch(string keyword, int currentPage, int pageSize);
+	(IQueryable<Person>, int) Search(string keyword, DateTime? birthDateFrom, DateTime? birthDateTo, int currentPage, int pageSize);
 	bool Exists(int id);
 }

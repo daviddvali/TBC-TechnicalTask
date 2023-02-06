@@ -20,8 +20,8 @@ internal sealed class RelatedPersonRequestDataValidationAttribute : RequestDataV
 		var actionName = (context.ActionDescriptor as ControllerActionDescriptor)?.ActionName;
 
 		if (actionName is nameof(PersonsController.AddRelatedPerson) or nameof(PersonsController.DeleteRelatedPerson) &&
-			context.ActionArguments.ContainsKey("model") &&
-			context.ActionArguments["model"] is RequestPersonModel)
+			context.ActionArguments.ContainsKey("from") &&
+			context.ActionArguments.ContainsKey("to"))
 		{
 			var from = (int) context.ActionArguments["from"]!;
 			var to = (int) context.ActionArguments["to"]!;

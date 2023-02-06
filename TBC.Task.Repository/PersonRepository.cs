@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Globalization;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using TBC.Task.Domain;
 using TBC.Task.Domain.Interfaces.Repositories;
 using TBC.Task.Repository.Database;
@@ -14,26 +16,48 @@ public sealed class PersonRepository : RepositoryBase<Person>, IPersonRepository
 		.Include(x => x.City)
 		.FirstOrDefault();
 
-	public IQueryable<Person> QuickSearch(string keyword, int currentPage, int pageSize) => _dbSet
-		.Where(x =>
+	public (IQueryable<Person>, int) QuickSearch(string keyword, int currentPage, int pageSize)
+	{
+		Expression<Func<Person, bool>> predicate = x =>
 			x.FirstName.Contains(keyword) ||
 			x.LastName.Contains(keyword) ||
-			x.PersonalNumber.Contains(keyword))
-		.Skip((currentPage - 1) * pageSize)
-		.Take(pageSize);
+			x.PersonalNumber.Contains(keyword);
 
-	public IQueryable<Person> Search(string keyword, int currentPage, int pageSize) => _dbSet
-		.Include(x => x.City)
-		.Where(x =>
+		var result = _dbSet
+			.Where(predicate)
+			.Skip((currentPage - 1) * pageSize)
+			.Take(pageSize);
+
+		var resultTotalCount = _dbSet
+			.Where(predicate)
+			.Count();
+
+		return (result, resultTotalCount);
+	}
+
+	public (IQueryable<Person>, int) Search(string keyword, DateTime? birthDateFrom, DateTime? birthDateTo, int currentPage, int pageSize)
+	{
+		Expression<Func<Person, bool>> predicate = x =>
 			x.FirstName.Contains(keyword) ||
 			x.LastName.Contains(keyword) ||
 			x.PersonalNumber.Contains(keyword) ||
-			x.BirthDate.ToString("dd.MM.yyy").Contains(keyword) ||
-			(x.MobilePhone ?? string.Empty).Contains(keyword) ||
-			(x.HomePhone ?? string.Empty).Contains(keyword) ||
-			(x.WorkPhone ?? string.Empty).Contains(keyword) ||
-			(x.City.Name ?? string.Empty).Contains(keyword)
-		)
-		.Skip((currentPage - 1) * pageSize)
-		.Take(pageSize);
+			((birthDateFrom.HasValue || x.BirthDate >= birthDateFrom) && (birthDateTo.HasValue || x.BirthDate >= birthDateTo)) ||
+			(x.MobilePhone != null && x.MobilePhone.Contains(keyword)) ||
+			(x.HomePhone != null && x.HomePhone.Contains(keyword)) ||
+			(x.WorkPhone != null && x.WorkPhone.Contains(keyword)) ||
+			(x.City != null && x.City.Name.Contains(keyword));
+		
+		var result = _dbSet
+			.Include(x => x.City)
+			.Where(predicate)
+			.Skip((currentPage - 1) * pageSize)
+			.Take(pageSize);
+
+		var resultTotalCount = _dbSet
+			.Include(x => x.City)
+			.Where(predicate)
+			.Count();
+
+		return (result, resultTotalCount);
+	}
 }

@@ -20,8 +20,9 @@ internal sealed class SearchRequestDataValidationAttribute : RequestDataValidati
 		var actionName = (context.ActionDescriptor as ControllerActionDescriptor)?.ActionName;
 
 		if (actionName is nameof(PersonsController.QuickSearch) or nameof(PersonsController.Search) &&
-			context.ActionArguments.ContainsKey("model") &&
-			context.ActionArguments["model"] is RequestPersonModel)
+			context.ActionArguments.ContainsKey("keyword") &&
+			context.ActionArguments.ContainsKey("currentPage") &&
+			context.ActionArguments.ContainsKey("pageSize"))
 		{
 			var keyword = context.ActionArguments["keyword"]?.ToString();
 			var currentPage = (int) context.ActionArguments["currentPage"]!;

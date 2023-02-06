@@ -4,7 +4,7 @@ using ILogger = Serilog.ILogger;
 
 namespace TBC.Task.API.ExceptionHandler;
 
-internal static partial class ExceptionMiddlewareExtensions
+internal static class ExceptionMiddlewareExtensions
 {
 	public static void ConfigureExceptionHandler(this IApplicationBuilder app, ILogger logger)
 	{

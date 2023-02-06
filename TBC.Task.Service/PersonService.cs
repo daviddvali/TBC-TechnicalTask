@@ -26,11 +26,11 @@ public sealed class PersonService : ServiceBase<Person, IPersonRepository>, IPer
 
 	public Person? GetIncludeCity(int id) => _repository.GetIncludeCity(id);
 
-	public IEnumerable<Person> QuickSearch(string keyword, int currentPage, int pageSize) =>
+	public (IQueryable<Person>, int) QuickSearch(string keyword, int currentPage, int pageSize) =>
 		_repository.QuickSearch(keyword, currentPage, pageSize);
 
-	public IEnumerable<Person> Search(string keyword, int currentPage, int pageSize) =>
-		_repository.Search(keyword, currentPage, pageSize);
+	public (IQueryable<Person>, int) Search(string keyword, DateTime? birthDateFrom, DateTime? birthDateTo, int currentPage, int pageSize) =>
+		_repository.Search(keyword, birthDateFrom, birthDateTo, currentPage, pageSize);
 
 	public bool Exists(int id) => _repository.Set().Any(x => x.Id == id);
 }

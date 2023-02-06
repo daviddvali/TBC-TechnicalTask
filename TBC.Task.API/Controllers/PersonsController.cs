@@ -161,38 +161,36 @@ public class PersonsController : ControllerBase
 
 	[HttpGet]
 	[Route("QuickSearch/{keyword}/{currentPage:int}/{pageSize:int?}")]
-	public async Task<ActionResult<IEnumerable<Person>>> QuickSearch(string keyword, int currentPage, int pageSize = 10)
+	public async Task<ActionResult<IEnumerable<Person>>> QuickSearch(
+		string keyword, int currentPage = 1, int pageSize = 100)
 	{
-		var result = _personService
-			.QuickSearch(keyword, currentPage, pageSize)
-			.Select(p => _mapper.Map<ResponsePersonModel>(p))
-			.ToArray();
+		var (result, resultTotalCount) = _personService.QuickSearch(keyword, currentPage, pageSize);
 
-		return Ok(new
-		{
+		return Ok(new ResponseSearchModel(
 			currentPage,
 			pageSize,
-			totalPages = (int) Math.Ceiling((double) result.Count() / pageSize),
+			resultTotalCount,
 			result
-		});
+				.Select(p => _mapper.Map<ResponsePersonModel>(p))
+				.ToArray()
+		));
 	}
 
 	[HttpGet]
-	[Route("Search/{keyword}/{currentPage:int}/{pageSize:int?}")]
-	public async Task<ActionResult<IEnumerable<Person>>> Search(string keyword, int currentPage, int pageSize = 10)
+	[Route("Search/{keyword}/{currentPage:int?}/{pageSize:int?}")]
+	public async Task<ActionResult<IEnumerable<Person>>> Search(
+		string keyword, DateTime? birthDateFrom = null, DateTime? birthDateTo = null, int currentPage = 1, int pageSize = 100)
 	{
-		var result = _personService
-			.Search(keyword, currentPage, pageSize)
-			.Select(p => _mapper.Map<ResponsePersonModel>(p))
-			.ToArray();
+		var (result, resultTotalCount) = _personService.Search(keyword, birthDateFrom, birthDateTo, currentPage, pageSize);
 
-		return Ok(new
-		{
+		return Ok(new ResponseSearchModel(
 			currentPage,
 			pageSize,
-			totalPages = (int) Math.Ceiling((double) result.Count() / pageSize),
+			resultTotalCount,
 			result
-		});
+				.Select(p => _mapper.Map<ResponsePersonModel>(p))
+				.ToArray()
+		));
 	}
 
 	#region Private helper methods

@@ -3,6 +3,6 @@
 public interface IPersonRepository : IRepository<Person>
 {
 	Person? GetIncludeCity(int id);
-	IQueryable<Person> QuickSearch(string keyword, int currentPage, int pageSize);
-	IQueryable<Person> Search(string keyword, int currentPage, int pageSize);
+	(IQueryable<Person>, int) QuickSearch(string keyword, int currentPage, int pageSize);
+	(IQueryable<Person>, int) Search(string keyword, DateTime? birthDateFrom, DateTime? birthDateTo, int currentPage, int pageSize);
 }

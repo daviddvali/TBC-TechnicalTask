@@ -4,7 +4,7 @@ using TBC.Task.Domain;
 
 namespace TBC.Task.API.AutoMapper;
 
-internal class PersonProfile : Profile
+internal sealed class PersonProfile : Profile
 {
 	public PersonProfile()
 	{
