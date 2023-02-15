@@ -14,6 +14,7 @@ internal sealed class PersonProfile : Profile
 			.ForMember(dest => dest.City, m => m.MapFrom(src => src.City != null ? src.City.Name : null));
 		
 		CreateMap<Person, ResponsePersonWithRelatedModel>()
-			.ForMember(dest => dest.City, m => m.MapFrom(src => src.City != null ? src.City.Name : null));
+			.ForMember(dest => dest.City, m => m.MapFrom(src => src.City != null ? src.City.Name : null))
+            .ForMember(dest => dest.RelatedTo, opt => opt.Ignore());
 	}
 }
