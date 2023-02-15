@@ -1,0 +1,57 @@
+[
+    {
+        "FirstName": "Maury",
+        "LastName": "Fanstone",
+        "PersonalNumber": 18688078213,
+        "Gender": 0,
+        "BirthDate": "1985-09-30",
+        "MobilePhone": 398990,
+        "WorkPhone": 849223,
+        "HomePhone": 662376,
+        "CityId": 1
+    },
+    {
+        "FirstName": "Franklin",
+        "LastName": "Albisser",
+        "PersonalNumber": 93570349777,
+        "Gender": 1,
+        "BirthDate": "1993-11-01",
+        "MobilePhone": 962477,
+        "WorkPhone": 955427,
+        "HomePhone": 258106,
+        "CityId": 3
+    },
+    {
+        "FirstName": "Anastasie",
+        "LastName": "Savins",
+        "PersonalNumber": 91949961230,
+        "Gender": 0,
+        "BirthDate": "1990-08-19",
+        "MobilePhone": null,
+        "WorkPhone": null,
+        "HomePhone": null,
+        "CityId": null
+    },
+    {
+        "FirstName": "Enrichetta",
+        "LastName": "Ciabatteri",
+        "PersonalNumber": 92538529813,
+        "Gender": 1,
+        "BirthDate": "1988-06-29",
+        "MobilePhone": 166178,
+        "WorkPhone": 116116,
+        "HomePhone": 686480,
+        "CityId": 5
+    },
+    {
+        "FirstName": "David",
+        "LastName": "Gaucher",
+        "PersonalNumber": 98551066396,
+        "Gender": 1,
+        "BirthDate": "1986-12-19",
+        "MobilePhone": null,
+        "WorkPhone": null,
+        "HomePhone": null,
+        "CityId": null
+    }
+]

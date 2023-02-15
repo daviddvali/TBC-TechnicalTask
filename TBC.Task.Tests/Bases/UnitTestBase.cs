@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using TBC.Task.Tests.Configurations;
 
 namespace TBC.Task.Tests.Bases;
@@ -20,4 +21,7 @@ public abstract class UnitTestBase
             .ConfigureServices(environment, configuration)
             .ConfigureDbContext();
     }
+
+    protected static List<T> GetTestDataFromJson<T>(string filePath) =>
+        JsonConvert.DeserializeObject<List<T>>(File.ReadAllText(filePath));
 }
