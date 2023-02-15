@@ -77,6 +77,25 @@ public sealed class PersonsUnitTests : UnitTestBase
     }
 
     [Theory]
+    [InlineData(3, 4)]
+    [InlineData(3, 5)]
+    [InlineData(3, 6)]
+    [InlineData(3, 7)]
+    [InlineData(3, 8)]
+    public async SystemTasks.Task ShouldDeleteRelatedPerson(int fromId, int toId)
+    {
+        var addRelatedPersonResponse = await _controller.AddRelatedPerson(fromId, toId)!;
+        Assert.IsType<OkResult>(addRelatedPersonResponse);
+
+        var deleteRelatedPersonResponse = await _controller.DeleteRelatedPerson(fromId, toId)!;
+        Assert.IsType<NoContentResult>(deleteRelatedPersonResponse);
+
+        var getPersonResponse = await _controller.Get(fromId)!;
+        var person = (ResponsePersonWithRelatedModel) (getPersonResponse as OkObjectResult)!.Value!;
+        Assert.DoesNotContain(toId, person.RelatedTo!.Select(x => x.Id));
+    }
+
+    [Theory]
     [InlineData(2, 3)]
     [InlineData(2, 4)]
     [InlineData(2, 5)]
@@ -96,27 +115,6 @@ public sealed class PersonsUnitTests : UnitTestBase
         var getPersonResponse = await _controller.Get(fromId)!;
         var person = (ResponsePersonWithRelatedModel) (getPersonResponse as OkObjectResult)!.Value!;
         Assert.Equal(relatedPersonsCount, person.RelatedTo!.Count());
-    }
-
-    [Theory]
-    [InlineData(3, 4)]
-    [InlineData(3, 5)]
-    [InlineData(3, 6)]
-    [InlineData(3, 7)]
-    [InlineData(3, 8)]
-    public async SystemTasks.Task ShouldDeleteRelatedPerson(int fromId, int toId)
-    {
-
-
-        var addRelatedPersonResponse = await _controller.AddRelatedPerson(fromId, toId)!;
-        Assert.IsType<OkResult>(addRelatedPersonResponse);
-
-        var deleteRelatedPersonResponse = await _controller.DeleteRelatedPerson(fromId, toId)!;
-        Assert.IsType<NoContentResult>(deleteRelatedPersonResponse);
-
-        var getPersonResponse = await _controller.Get(fromId)!;
-        var person = (ResponsePersonWithRelatedModel) (getPersonResponse as OkObjectResult)!.Value!;
-        Assert.DoesNotContain(toId, person.RelatedTo!.Select(x => x.Id));
     }
 
     [Fact]
