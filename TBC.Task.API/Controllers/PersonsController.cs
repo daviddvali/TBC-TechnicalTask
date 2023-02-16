@@ -158,7 +158,7 @@ public class PersonsController : ControllerBase
 
 	[HttpGet]
 	[Route("QuickSearch/{keyword}/{currentPage:int}/{pageSize:int?}")]
-	public async Task<ActionResult<IEnumerable<Person>>> QuickSearch(
+	public async Task<IActionResult> QuickSearch(
 		string keyword, int currentPage = 1, int pageSize = 100)
 	{
 		var (result, resultTotalCount) = _personService.QuickSearch(keyword, currentPage, pageSize);
@@ -175,7 +175,7 @@ public class PersonsController : ControllerBase
 
 	[HttpGet]
 	[Route("Search/{keyword}/{currentPage:int?}/{pageSize:int?}")]
-	public async Task<ActionResult<IEnumerable<Person>>> Search(
+	public async Task<IActionResult> Search(
 		string keyword, DateTime? birthDateFrom = null, DateTime? birthDateTo = null, int currentPage = 1, int pageSize = 100)
 	{
 		if (!(birthDateFrom.HasValue && birthDateTo.HasValue || !birthDateFrom.HasValue && !birthDateTo.HasValue))
@@ -225,8 +225,11 @@ public class PersonsController : ControllerBase
 		if (!Directory.Exists(imageDirectory))
 			Directory.CreateDirectory(imageDirectory);
 
-		using var fileStream = System.IO.File.Create(Path.Combine(imageFilePath));
-		file.CopyTo(fileStream);
+        using var stream = file.OpenReadStream();
+        stream.Seek(0, SeekOrigin.Begin);
+
+        using var fileStream = System.IO.File.Create(Path.Combine(imageFilePath));
+        stream.CopyTo(fileStream);
 		fileStream.Flush();
 
 		return imageFilePath;
