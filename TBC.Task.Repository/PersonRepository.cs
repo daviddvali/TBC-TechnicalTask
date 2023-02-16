@@ -24,7 +24,8 @@ public sealed class PersonRepository : RepositoryBase<Person>, IPersonRepository
 
 		var result = _dbSet
 			.Where(predicate)
-			.Skip((currentPage - 1) * pageSize)
+            .Include(x => x.City)
+            .Skip((currentPage - 1) * pageSize)
 			.Take(pageSize);
 
 		var resultTotalCount = _dbSet
