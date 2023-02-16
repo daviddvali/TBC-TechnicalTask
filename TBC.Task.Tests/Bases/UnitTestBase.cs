@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Newtonsoft.Json;
 using TBC.Task.Tests.Configurations;
 
@@ -20,6 +22,21 @@ public abstract class UnitTestBase
         _services
             .ConfigureServices(environment, configuration)
             .ConfigureDbContext();
+    }
+
+    protected static IFormFile GetMockFile(string fileName, int photoSize)
+    {
+        byte[] data = new byte[photoSize];
+        Random.Shared.NextBytes(data);
+
+        var file = new MemoryStream(data);
+        var mockFile = new Mock<IFormFile>();
+        mockFile.Setup(f => f.FileName).Returns(fileName);
+        mockFile.Setup(f => f.Length).Returns(file.Length);
+        mockFile.Setup(f => f.ContentType).Returns("image/jpg");
+        mockFile.Setup(f => f.OpenReadStream()).Returns(file);
+
+        return mockFile.Object;
     }
 
     protected static List<T> GetTestDataFromJson<T>(string filePath) =>

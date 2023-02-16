@@ -14,4 +14,10 @@ internal static class ActionResultExtensions
 
         return (T) Convert.ChangeType(value, typeof(T))!;
     }
+
+    public static OkObjectResult? ToOkObjectResult(this IActionResult response) =>
+        response as OkObjectResult;
+
+    public static FileContentResult? ToFileContentResult(this IActionResult response) =>
+        response as FileContentResult;
 }

@@ -33,6 +33,13 @@ public sealed class DbFixture : IDisposable
 
             return persons;
         }
+
+        _dbContext.Cities.Add(new City { Name = "Tbilisi" });
+        _dbContext.Cities.Add(new City { Name = "Batumi" });
+        _dbContext.Cities.Add(new City { Name = "Kutaisi" });
+        _dbContext.Cities.Add(new City { Name = "Rustavi" });
+        _dbContext.Cities.Add(new City { Name = "Gori" });
+        _dbContext.SaveChanges();
         
         GetTestData().ForEach(p => _dbContext.Persons.Add(p));
         _dbContext.SaveChanges();

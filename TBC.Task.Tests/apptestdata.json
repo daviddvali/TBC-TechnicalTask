@@ -52,7 +52,7 @@
         "MobilePhone": null,
         "WorkPhone": null,
         "HomePhone": null,
-        "CityId": null
+        "CityId": 3
     },
     {
         "FirstName": "Sileas",
@@ -338,7 +338,7 @@
         "MobilePhone": null,
         "WorkPhone": null,
         "HomePhone": null,
-        "CityId": null
+        "CityId": 1
     },
     {
         "FirstName": "Powell",
