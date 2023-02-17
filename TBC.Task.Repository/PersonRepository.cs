@@ -12,6 +12,7 @@ public sealed class PersonRepository : RepositoryBase<Person>, IPersonRepository
 
 	public Person? GetIncludeCity(int id) => _dbSet
 		.Where(x => x.Id == id)
+        .AsNoTracking()
 		.Include(x => x.City)
 		.FirstOrDefault();
 
