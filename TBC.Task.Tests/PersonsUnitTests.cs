@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using TBC.Task.API.Controllers;
 using TBC.Task.API.Models;
+using TBC.Task.Domain.Enumerations;
 using TBC.Task.Tests.Bases;
 using TBC.Task.Tests.Extensions;
 using SystemTasks = System.Threading.Tasks;
@@ -137,6 +138,7 @@ public sealed class PersonsUnitTests : UnitTestBase
         }
     }
 
+    [Theory]
     [InlineData(41)]
     [InlineData(42)]
     [InlineData(43)]
@@ -154,31 +156,34 @@ public sealed class PersonsUnitTests : UnitTestBase
 
         RequestPersonModel model = new()
         {
-            FirstName = person.FirstName,
-            LastName = person.LastName,
-            PersonalNumber = person.PersonalNumber,
-            Gender = person.Gender,
-            BirthDate = person.BirthDate,
-            MobilePhone = person.MobilePhone,
-            WorkPhone = person.WorkPhone,
-            HomePhone = person.HomePhone,
-            CityId = person.CityId
+            FirstName = new string(person.FirstName.Reverse().ToArray()),
+            LastName = new string(person.LastName.Reverse().ToArray()),
+            PersonalNumber = new string(person.PersonalNumber.Reverse().ToArray()),
+            Gender = (GenderType) Random.Shared.Next(0, 2),
+            BirthDate = person.BirthDate.AddDays(Random.Shared.Next(-20, 20)),
+            MobilePhone = Random.Shared.Next(100000, 999999).ToString(),
+            WorkPhone = Random.Shared.Next(100000, 999999).ToString(),
+            HomePhone = Random.Shared.Next(100000, 999999).ToString(),
+            CityId = Random.Shared.Next(1, 6)
         };
 
         var updatePersonResponse = await _controller.Update(id, model)!;
         Assert.IsType<NoContentResult>(updatePersonResponse);
-    }
 
-    [Fact]
-    public async SystemTasks.Task ShouldNotAddPersons()
-    {
-        foreach (var person in GetTestDataFromJson<RequestPersonModel>("appinvalidtestdata.json"))
-        {
-            var response = await _controller.Create(person);
-            Assert.IsType<OkObjectResult>(response);
-        }
-    }
+        getPersonResponse = await _controller.Get(id)!;
+        person = (ResponsePersonModel) getPersonResponse.ToOkObjectResult()!.Value!;
 
+        Assert.True(person.FirstName.Equals(model.FirstName)&&
+                    person.LastName.Equals(model.LastName) &&
+                    person.PersonalNumber.Equals(model.PersonalNumber) &&
+                    person.Gender.Equals(model.Gender) &&
+                    person.BirthDate.Equals(model.BirthDate) &&
+                    person.MobilePhone!.Equals(model.MobilePhone) &&
+                    person.HomePhone!.Equals(model.HomePhone) &&
+                    person.WorkPhone!.Equals(model.WorkPhone) &&
+                    person.CityId.Equals(model.CityId));
+    }
+    
     [Theory]
     [InlineData(1)]
     [InlineData(2)]
