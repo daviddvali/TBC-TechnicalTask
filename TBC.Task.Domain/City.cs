@@ -1,4 +1,4 @@
-﻿using TBC.Task.Domain.Interfaces.Entities;
+﻿using TBC.Task.Domain.Interfaces;
 
 namespace TBC.Task.Domain;
 

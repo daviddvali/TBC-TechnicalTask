@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
-using TBC.Task.Domain.Interfaces.Entities;
-using TBC.Task.Domain.Interfaces.Repositories;
-using TBC.Task.Domain.Interfaces.Services;
+using TBC.Task.Domain.Interfaces;
+using TBC.Task.Service.Interfaces.Repositories;
+using TBC.Task.Service.Interfaces.Services;
 
 namespace TBC.Task.Service;
 

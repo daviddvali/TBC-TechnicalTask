@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using TBC.Task.Domain.Interfaces.Repositories;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using TBC.Task.Service.Interfaces.Repositories;
 using TBC.Task.Repository.Database;
 
 namespace TBC.Task.Repository;

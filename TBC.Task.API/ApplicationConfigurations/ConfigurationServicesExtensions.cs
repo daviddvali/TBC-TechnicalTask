@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TBC.Task.Domain.Interfaces.Repositories;
-using TBC.Task.Domain.Interfaces.Services;
-using TBC.Task.Repository.Database;
-using TBC.Task.Repository;
-using TBC.Task.Service;
-using TBC.Task.API.Swagger;
-using TBC.Task.API.Serilog;
 using TBC.Task.API.ActionFilters;
+using TBC.Task.API.Serilog;
+using TBC.Task.API.Swagger;
+using TBC.Task.Repository;
+using TBC.Task.Repository.Database;
+using TBC.Task.Service;
+using TBC.Task.Service.Interfaces.Repositories;
+using TBC.Task.Service.Interfaces.Services;
 
 namespace TBC.Task.API.ApplicationConfigurations;
 
@@ -18,18 +18,18 @@ internal static class ConfigurationServicesExtensions
 
         builder.Services.AddControllers(options =>
         {
-	        options.Filters.Add<PersonRequestDataValidationAttribute>();
-	        options.Filters.Add<RelatedPersonRequestDataValidationAttribute>();
-	        options.Filters.Add<SearchRequestDataValidationAttribute>();
+            options.Filters.Add<PersonRequestDataValidationAttribute>();
+            options.Filters.Add<RelatedPersonRequestDataValidationAttribute>();
+            options.Filters.Add<SearchRequestDataValidationAttribute>();
         });
         builder.Services.AddEndpointsApiExplorer();
 
-		builder.ConfigureSwagger();
+        builder.ConfigureSwagger();
         builder.ConfigureLogger();
 
         builder.Services.AddLocalization();
 
-		builder.Services.AddDbContext<PersonsDbContext>(options =>
+        builder.Services.AddDbContext<PersonsDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("TbcPersons")));
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -38,9 +38,9 @@ internal static class ConfigurationServicesExtensions
         builder.Services.AddTransient<IPersonRepository, PersonRepository>();
         builder.Services.AddTransient<IRelatedPersonRepository, RelatedPersonRepository>();
 
-        builder.Services.AddTransient<ICityService, CityService>();
-        builder.Services.AddTransient<IPersonService, PersonService>();
-        builder.Services.AddTransient<IRelatedPersonService, RelatedPersonService>();
+        builder.Services.AddScoped<ICityService, CityService>();
+        builder.Services.AddScoped<IPersonService, PersonService>();
+        builder.Services.AddScoped<IRelatedPersonService, RelatedPersonService>();
 
         return builder;
     }

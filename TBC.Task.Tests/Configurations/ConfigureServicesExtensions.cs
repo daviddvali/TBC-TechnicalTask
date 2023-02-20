@@ -3,11 +3,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TBC.Task.API.Controllers;
-using TBC.Task.Domain.Interfaces.Repositories;
-using TBC.Task.Domain.Interfaces.Services;
 using TBC.Task.Repository;
 using TBC.Task.Repository.Database;
 using TBC.Task.Service;
+using TBC.Task.Service.Interfaces.Repositories;
+using TBC.Task.Service.Interfaces.Services;
 
 namespace TBC.Task.Tests.Configurations;
 

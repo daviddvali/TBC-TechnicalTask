@@ -1,4 +1,6 @@
-﻿namespace TBC.Task.Domain.Interfaces.Services;
+﻿using TBC.Task.Domain;
+
+namespace TBC.Task.Service.Interfaces.Services;
 
 public interface IRelatedPersonService : IQueryService<RelatedPerson>, ICommandService<RelatedPerson>
 {

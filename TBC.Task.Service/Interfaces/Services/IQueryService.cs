@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace TBC.Task.Domain.Interfaces.Services;
+namespace TBC.Task.Service.Interfaces.Services;
 
 public interface IQueryService<TEntity>
 {

@@ -1,6 +1,6 @@
 ﻿using TBC.Task.Domain;
-using TBC.Task.Domain.Interfaces.Repositories;
-using TBC.Task.Domain.Interfaces.Services;
+using TBC.Task.Service.Interfaces.Repositories;
+using TBC.Task.Service.Interfaces.Services;
 
 namespace TBC.Task.Service;
 

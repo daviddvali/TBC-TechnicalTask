@@ -1,4 +1,6 @@
-﻿namespace TBC.Task.Domain.Interfaces.Repositories;
+﻿using TBC.Task.Domain;
+
+namespace TBC.Task.Service.Interfaces.Repositories;
 
 public interface IRelatedPersonRepository : IRepository<RelatedPerson>
 {

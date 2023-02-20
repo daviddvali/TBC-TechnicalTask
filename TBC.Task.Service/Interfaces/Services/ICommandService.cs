@@ -1,4 +1,4 @@
-﻿namespace TBC.Task.Domain.Interfaces.Services;
+﻿namespace TBC.Task.Service.Interfaces.Services;
 
 public interface ICommandService<in TEntity>
 {

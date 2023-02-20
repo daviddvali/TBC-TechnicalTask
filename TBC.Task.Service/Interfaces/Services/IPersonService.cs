@@ -1,6 +1,6 @@
-﻿using TBC.Task.Domain.Interfaces.Entities;
+﻿using TBC.Task.Domain;
 
-namespace TBC.Task.Domain.Interfaces.Services;
+namespace TBC.Task.Service.Interfaces.Services;
 
 public interface IPersonService : IQueryService<Person>, ICommandService<Person>
 {
