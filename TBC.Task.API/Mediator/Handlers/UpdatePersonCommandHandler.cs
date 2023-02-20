@@ -23,6 +23,6 @@ public sealed class UpdatePersonCommandHandler : IRequestHandler<UpdatePersonCom
         var person = _mapper.Map<Person>(request.Model);
         _personService.Update(person);
 
-        return new RequestPersonModel { Id = request.Model.Id };
+        return _mapper.Map<RequestPersonModel>(person);
     }
 }

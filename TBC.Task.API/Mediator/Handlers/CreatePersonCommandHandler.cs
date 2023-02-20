@@ -22,8 +22,8 @@ public sealed class CreatePersonCommandHandler : IRequestHandler<CreatePersonCom
     {
         var person = _mapper.Map<Person>(request.Model);
         person.Id = 0;
-        var id = _personService.Insert(person);
+        _personService.Insert(person);
 
-        return new RequestPersonModel { Id = id };
+        return _mapper.Map<RequestPersonModel>(person);
     }
 }

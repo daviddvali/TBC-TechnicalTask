@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
-using TBC.Task.API.Mediator.Commands.Persons;
+﻿using MediatR;
 using TBC.Task.API.Mediator.Commands.RelatedPersons;
 using TBC.Task.API.Models;
 using TBC.Task.Domain;
