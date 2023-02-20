@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using AutoMapper;
+using MediatR;
 using TBC.Task.API.Localization;
+using TBC.Task.API.Mediator.Commands.Persons;
 using TBC.Task.API.Models;
 using TBC.Task.API.Resources;
 using TBC.Task.Domain;
 using TBC.Task.Service.Interfaces.Services;
+using TBC.Task.API.Mediator.Commands.RelatedPersons;
 
 namespace TBC.Task.API.Controllers;
 
@@ -18,6 +21,7 @@ public class PersonsController : ControllerBase
     private readonly IHostEnvironment _environment;
     private readonly IStringLocalizer<ErrorResources> _errorLocalizer;
     private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
     private readonly IConfiguration _configuration;
 
     public PersonsController(
@@ -26,6 +30,7 @@ public class PersonsController : ControllerBase
         IHostEnvironment environment,
         IStringLocalizer<ErrorResources> errorLocalizer,
         IMapper mapper,
+        IMediator mediator,
         IConfiguration configuration)
     {
         _personService = personService ?? throw new ArgumentNullException(nameof(personService));
@@ -33,16 +38,16 @@ public class PersonsController : ControllerBase
         _environment = environment ?? throw new ArgumentNullException(nameof(environment));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _errorLocalizer = errorLocalizer ?? throw new ArgumentNullException(nameof(errorLocalizer));
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     }
 
     [HttpPost]
     public async Task<IActionResult> Create(RequestPersonModel model)
     {
-        var person = _mapper.Map<Person>(model);
-        var id = _personService.Insert(person);
+        var personModel = await _mediator.Send(new CreatePersonCommand(model));
 
-        return Ok(new { id });
+        return Ok(new { id = personModel.Id });
     }
 
     [HttpPut]
@@ -51,9 +56,7 @@ public class PersonsController : ControllerBase
         if (!_personService.Exists(id))
             return NotFound(_errorLocalizer.GetLocalized(ErrorResources.PersonNotFound));
 
-        var person = _mapper.Map<Person>(model);
-        person.Id = id;
-        _personService.Update(person);
+        await _mediator.Send(new UpdatePersonCommand(model));
 
         return NoContent();
     }
@@ -64,7 +67,7 @@ public class PersonsController : ControllerBase
         if (!_personService.Exists(id))
             return NotFound(_errorLocalizer.GetLocalized(ErrorResources.PersonNotFound));
 
-        _personService.Delete(_personService.Get(id));
+        await _mediator.Send(new DeletePersonCommand(id));
 
         return NoContent();
     }
@@ -86,7 +89,7 @@ public class PersonsController : ControllerBase
         if (_relatedPersonService.Exists(from, to))
             return Ok();
 
-        _relatedPersonService.Insert(new RelatedPerson { FromId = from, ToId = to });
+        await _mediator.Send(new CreateRelatedPersonCommand(new RelatedPersonModel(from, to)));
 
         return Ok();
     }
@@ -98,7 +101,7 @@ public class PersonsController : ControllerBase
         if (!_relatedPersonService.Exists(from, to))
             return NotFound(_errorLocalizer.GetLocalized(ErrorResources.RelationNotFound));
 
-        _relatedPersonService.Delete(from, to);
+        await _mediator.Send(new DeleteRelatedPersonCommand(new RelatedPersonModel(from, to)));
 
         return NoContent();
     }

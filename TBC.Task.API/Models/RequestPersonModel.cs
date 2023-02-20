@@ -4,6 +4,7 @@ namespace TBC.Task.API.Models;
 
 public sealed record RequestPersonModel
 {
+    public int? Id { get; set; }
 	public string FirstName { get; set; } = null!;
 	public string LastName { get; set; } = null!;
 	public string PersonalNumber { get; set; } = null!;

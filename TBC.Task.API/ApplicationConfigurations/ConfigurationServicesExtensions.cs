@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using TBC.Task.API.ActionFilters;
+using TBC.Task.API.Mediator.Handlers;
 using TBC.Task.API.Serilog;
 using TBC.Task.API.Swagger;
 using TBC.Task.Repository;
@@ -10,7 +12,7 @@ using TBC.Task.Service.Interfaces.Services;
 
 namespace TBC.Task.API.ApplicationConfigurations;
 
-internal static class ConfigurationServicesExtensions
+public static class ConfigurationServicesExtensions
 {
     public static WebApplicationBuilder RegisterServices(this WebApplicationBuilder builder)
     {
@@ -23,6 +25,8 @@ internal static class ConfigurationServicesExtensions
             options.Filters.Add<SearchRequestDataValidationAttribute>();
         });
         builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddMediatR(c =>
+            c.RegisterServicesFromAssemblyContaining<Program>());
 
         builder.ConfigureSwagger();
         builder.ConfigureLogger();
