@@ -64,7 +64,7 @@ public class PersonsController : ControllerBase
 		if (!_personService.Exists(id))
 			return NotFound(_errorLocalizer.GetLocalized(ErrorResources.PersonNotFound));
 
-		_personService.Delete(id);
+		_personService.Delete(_personService.Get(id));
 
 		return NoContent();
 	}

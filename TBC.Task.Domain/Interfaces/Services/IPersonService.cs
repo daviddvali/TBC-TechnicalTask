@@ -1,6 +1,8 @@
-﻿namespace TBC.Task.Domain.Interfaces.Services;
+﻿using TBC.Task.Domain.Interfaces.Entities;
 
-public interface IPersonService : IService<Person>
+namespace TBC.Task.Domain.Interfaces.Services;
+
+public interface IPersonService : IQueryService<Person>, ICommandService<Person>
 {
 	Person? GetIncludeCity(int id);
 	(IQueryable<Person>, int) QuickSearch(string keyword, int currentPage, int pageSize);

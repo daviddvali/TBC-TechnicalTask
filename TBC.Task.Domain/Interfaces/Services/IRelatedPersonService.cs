@@ -1,6 +1,6 @@
 ﻿namespace TBC.Task.Domain.Interfaces.Services;
 
-public interface IRelatedPersonService : IService<RelatedPerson>
+public interface IRelatedPersonService : IQueryService<RelatedPerson>, ICommandService<RelatedPerson>
 {
 	void Delete(int fromId, int toId);
 	int GetRelatedPersonsCount(int id);

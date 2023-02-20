@@ -5,7 +5,7 @@ using TBC.Task.Domain.Interfaces.Services;
 
 namespace TBC.Task.Service;
 
-public abstract class ServiceBase<TEntity, TRepository> : IService<TEntity>
+public abstract class ServiceBase<TEntity, TRepository> : IQueryService<TEntity>, ICommandService<TEntity>
 	where TEntity : class
 	where TRepository : IRepository<TEntity>
 {
@@ -27,7 +27,7 @@ public abstract class ServiceBase<TEntity, TRepository> : IService<TEntity>
 	{
 		_repository.Insert(entity);
 		_repository.SaveChanges();
-		
+
 		return entity is IEntitiy entityWithId ? entityWithId.Id : null;
 	}
 
