@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using TBC.Task.API.Mediator.Commands.Persons;
+using TBC.Task.API.Mediator.Commands;
 using TBC.Task.Service.Interfaces.Services;
 
 namespace TBC.Task.API.Mediator.Handlers;

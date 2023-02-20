@@ -3,12 +3,11 @@ using Microsoft.Extensions.Localization;
 using AutoMapper;
 using MediatR;
 using TBC.Task.API.Localization;
-using TBC.Task.API.Mediator.Commands.Persons;
+using TBC.Task.API.Mediator.Commands;
 using TBC.Task.API.Models;
 using TBC.Task.API.Resources;
 using TBC.Task.Domain;
 using TBC.Task.Service.Interfaces.Services;
-using TBC.Task.API.Mediator.Commands.RelatedPersons;
 
 namespace TBC.Task.API.Controllers;
 
@@ -75,9 +74,10 @@ public class PersonsController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Get(int id)
     {
-        var person = BuildGetResponse(id);
-        if (person == null)
+        if (!_personService.Exists(id))
             return NotFound(_errorLocalizer.GetLocalized(ErrorResources.PersonNotFound));
+
+        var person = await _mediator.Send(new GetPersonQuery(id));
 
         return Ok(person);
     }
@@ -89,7 +89,7 @@ public class PersonsController : ControllerBase
         if (_relatedPersonService.Exists(from, to))
             return Ok();
 
-        await _mediator.Send(new CreateRelatedPersonCommand(new RelatedPersonModel(from, to)));
+        await _mediator.Send(new CreateRelatedPersonCommand(new RequestRelatedPersonModel(from, to)));
 
         return Ok();
     }
@@ -101,7 +101,7 @@ public class PersonsController : ControllerBase
         if (!_relatedPersonService.Exists(from, to))
             return NotFound(_errorLocalizer.GetLocalized(ErrorResources.RelationNotFound));
 
-        await _mediator.Send(new DeleteRelatedPersonCommand(new RelatedPersonModel(from, to)));
+        await _mediator.Send(new DeleteRelatedPersonCommand(new RequestRelatedPersonModel(from, to)));
 
         return NoContent();
     }
@@ -128,13 +128,7 @@ public class PersonsController : ControllerBase
         if (file.Length == 0)
             return BadRequest();
 
-        var person = _personService.Get(id);
-        var imageFilePath = SavePhoto(id, file);
-
-        person.PhotoPath = imageFilePath;
-        person.PhotoUrl = $"{_configuration["PhotoRelativeUrl"]}/{person.Id}";
-
-        _personService.Update(person);
+        await _mediator.Send(new RequestUploadPhotoModel(id, file));
 
         return Ok(new
         {
@@ -198,44 +192,12 @@ public class PersonsController : ControllerBase
 
     #region Private helper methods
 
-    private ResponsePersonWithRelatedModel? BuildGetResponse(int id)
-    {
-        var person = _personService.GetIncludeCity(id);
-        if (person == null)
-            return null;
-
-        var relatedPersons = _relatedPersonService.GetRelatedPersons(id);
-
-        var response = _mapper.Map<ResponsePersonWithRelatedModel>(person);
-        response.RelatedTo = relatedPersons.Select(p => _mapper.Map<ResponsePersonModel>(p));
-
-        return response;
-    }
-
     private static async Task<byte[]> GetPhotoData(Person person)
     {
         if (string.IsNullOrEmpty(person.PhotoPath) || !System.IO.File.Exists(person.PhotoPath))
             return Array.Empty<byte>();
 
         return await System.IO.File.ReadAllBytesAsync(person.PhotoPath);
-    }
-
-    private string SavePhoto(int id, IFormFile file)
-    {
-        var imageDirectory = Path.Combine(_environment.ContentRootPath, "Uploads", "Photos", id.ToString());
-        var imageFilePath = Path.Combine(imageDirectory, file.FileName);
-
-        if (!Directory.Exists(imageDirectory))
-            Directory.CreateDirectory(imageDirectory);
-
-        using var stream = file.OpenReadStream();
-        stream.Seek(0, SeekOrigin.Begin);
-
-        using var fileStream = System.IO.File.Create(Path.Combine(imageFilePath));
-        stream.CopyTo(fileStream);
-        fileStream.Flush();
-
-        return imageFilePath;
     }
 
     #endregion
