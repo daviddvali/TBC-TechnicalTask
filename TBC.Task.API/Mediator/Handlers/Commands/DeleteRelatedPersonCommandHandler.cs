@@ -5,14 +5,14 @@ using TBC.Task.Service.Interfaces.Services;
 
 namespace TBC.Task.API.Mediator.Handlers.Commands;
 
-public sealed class DeleteRelatedPersonCommandHandler : IRequestHandler<CreateRelatedPersonCommand, RequestRelatedPersonModel>
+public sealed class DeleteRelatedPersonCommandHandler : IRequestHandler<DeleteRelatedPersonCommand, RequestRelatedPersonModel>
 {
     private readonly IRelatedPersonService _relatedPersonService;
 
     public DeleteRelatedPersonCommandHandler(IRelatedPersonService relatedPersonService) =>
         _relatedPersonService = relatedPersonService ?? throw new ArgumentNullException(nameof(relatedPersonService));
 
-    public async Task<RequestRelatedPersonModel> Handle(CreateRelatedPersonCommand request, CancellationToken cancellationToken)
+    public async Task<RequestRelatedPersonModel> Handle(DeleteRelatedPersonCommand request, CancellationToken cancellationToken)
     {
         _relatedPersonService.Delete(request.Model.FromId, request.Model.ToId);
 

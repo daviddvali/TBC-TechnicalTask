@@ -49,6 +49,7 @@ public class PersonsController : ControllerBase
         if (!_personService.Exists(id))
             return NotFound(_errorLocalizer.GetLocalized(ErrorResources.PersonNotFound));
 
+        model.Id = id;
         await _mediator.Send(new UpdatePersonCommand(model));
 
         return NoContent();
@@ -121,7 +122,7 @@ public class PersonsController : ControllerBase
         if (file.Length == 0)
             return BadRequest();
 
-        await _mediator.Send(new RequestUploadPhotoModel(id, file));
+        await _mediator.Send(new UploadPhotoCommand(new RequestUploadPhotoModel(id, file)));
 
         return Ok(new
         {

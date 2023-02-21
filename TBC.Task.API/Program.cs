@@ -1,10 +1,18 @@
-using TBC.Task.API.Middlewares;
 using TBC.Task.API.ApplicationConfigurations;
+using TBC.Task.API.Middlewares;
 
-var app = WebApplication
-	.CreateBuilder(args)
-	.RegisterServices()
-	.Build();
+namespace TBC.Task.API;
 
-app.UseMiddleware<SetAcceptLanguageMiddleware>();
-app.SetupApplication().Run();
+public class Program
+{
+    private static void Main(string[] args)
+    {
+        var app = WebApplication
+            .CreateBuilder(args)
+            .RegisterServices()
+            .Build();
+
+        app.UseMiddleware<SetAcceptLanguageMiddleware>();
+        app.SetupApplication().Run();
+    }
+}

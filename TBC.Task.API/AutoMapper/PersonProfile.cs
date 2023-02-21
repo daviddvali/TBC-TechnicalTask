@@ -8,13 +8,14 @@ internal sealed class PersonProfile : Profile
 {
 	public PersonProfile()
 	{
-		CreateMap<RequestPersonModel, Person>();
+		CreateMap<RequestPersonModel, Person>()
+            .ReverseMap();
 		
 		CreateMap<Person, ResponsePersonModel>()
-			.ForMember(dest => dest.City, m => m.MapFrom(src => src.City != null ? src.City.Name : null));
-		
+	        .ForMember(dest => dest.City, m => m.MapFrom(src => src.City != null ? src.City.Name : null));
+
 		CreateMap<Person, ResponsePersonWithRelatedModel>()
 			.ForMember(dest => dest.City, m => m.MapFrom(src => src.City != null ? src.City.Name : null))
-            .ForMember(dest => dest.RelatedTo, opt => opt.Ignore());
+			.ForMember(dest => dest.RelatedTo, opt => opt.Ignore());
 	}
 }

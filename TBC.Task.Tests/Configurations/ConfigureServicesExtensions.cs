@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TBC.Task.API;
 using TBC.Task.API.Controllers;
 using TBC.Task.Repository;
 using TBC.Task.Repository.Database;
@@ -24,6 +25,8 @@ public static class ConfigureServicesExtensions
         services.AddLocalization();
 
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        services.AddMediatR(c =>
+            c.RegisterServicesFromAssemblyContaining<Program>());
 
         services.AddTransient<ICityRepository, CityRepository>();
         services.AddTransient<IPersonRepository, PersonRepository>();
