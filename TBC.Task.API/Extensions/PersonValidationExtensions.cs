@@ -47,11 +47,11 @@ public static class PersonValidationExtensions
 			   !(hasLatinPattern && hasGeorgianPattern);
 	}
 
-	private static int GetAge(DateTime bornDate)
+	private static int GetAge(DateTime bornDate, DateTime? today = null)
 	{
-		DateTime today = DateTime.Today;
-		int age = today.Year - bornDate.Year;
-		if (bornDate > today.AddYears(-age))
+		today ??= DateTime.Today;
+		int age = today.Value.Year - bornDate.Year;
+		if (bornDate > today.Value.AddYears(-age))
 		{
 			age--;
 		}

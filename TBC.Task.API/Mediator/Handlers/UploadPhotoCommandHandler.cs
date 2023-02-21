@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using TBC.Task.API.Mediator.Commands;
-using TBC.Task.API.Models;
 using TBC.Task.Service.Interfaces.Services;
 
 namespace TBC.Task.API.Mediator.Handlers;

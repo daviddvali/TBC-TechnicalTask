@@ -18,6 +18,7 @@ public sealed class GetPersonCommandHandler : IRequestHandler<GetPersonQuery, Re
         _relatedPersonService = relatedPersonService ?? throw new ArgumentNullException(nameof(relatedPersonService));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
+
     public async Task<ResponsePersonWithRelatedModel> Handle(GetPersonQuery request, CancellationToken cancellationToken)
     {
         var person = BuildGetResponse(request.Id);

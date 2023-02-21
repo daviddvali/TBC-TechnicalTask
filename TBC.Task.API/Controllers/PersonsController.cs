@@ -17,28 +17,22 @@ public class PersonsController : ControllerBase
 {
     private readonly IPersonService _personService;
     private readonly IRelatedPersonService _relatedPersonService;
-    private readonly IHostEnvironment _environment;
     private readonly IStringLocalizer<ErrorResources> _errorLocalizer;
     private readonly IMapper _mapper;
     private readonly IMediator _mediator;
-    private readonly IConfiguration _configuration;
 
     public PersonsController(
         IPersonService personService,
         IRelatedPersonService relatedPersonService,
-        IHostEnvironment environment,
         IStringLocalizer<ErrorResources> errorLocalizer,
         IMapper mapper,
-        IMediator mediator,
-        IConfiguration configuration)
+        IMediator mediator)
     {
         _personService = personService ?? throw new ArgumentNullException(nameof(personService));
         _relatedPersonService = relatedPersonService ?? throw new ArgumentNullException(nameof(relatedPersonService));
-        _environment = environment ?? throw new ArgumentNullException(nameof(environment));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _errorLocalizer = errorLocalizer ?? throw new ArgumentNullException(nameof(errorLocalizer));
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     }
 
     [HttpPost]
@@ -113,10 +107,9 @@ public class PersonsController : ControllerBase
         if (!_personService.Exists(id))
             return NotFound(_errorLocalizer.GetLocalized(ErrorResources.PersonNotFound));
 
-        return Ok(new
-        {
-            relatedPersonsCount = _relatedPersonService.GetRelatedPersonsCount(id)
-        });
+        var count = await _mediator.Send(new GetRelatedPersonsCountQuery(id));
+
+        return Ok(new { relatedPersonsCount = count });
     }
 
     [HttpPatch]
@@ -144,8 +137,7 @@ public class PersonsController : ControllerBase
         if (!_personService.Exists(id))
             return NotFound(_errorLocalizer.GetLocalized(ErrorResources.PersonNotFound));
 
-        var person = _personService.Get(id);
-        var data = await GetPhotoData(person);
+        var data = await _mediator.Send(new GetPhotoQuery(id));
 
         if (!data.Any())
             return NotFound();
@@ -155,19 +147,12 @@ public class PersonsController : ControllerBase
 
     [HttpGet]
     [Route("QuickSearch/{keyword}/{currentPage:int}/{pageSize:int?}")]
-    public async Task<IActionResult> QuickSearch(
-        string keyword, int currentPage = 1, int pageSize = 100)
+    public async Task<IActionResult> QuickSearch(string keyword, int currentPage = 1, int pageSize = 100)
     {
-        var (result, resultTotalCount) = _personService.QuickSearch(keyword, currentPage, pageSize);
+        var result = await _mediator.Send(new QuickSearchQuery(
+            new RequestQuickSearchModel(keyword, currentPage, pageSize)));
 
-        return Ok(new ResponseSearchModel(
-            currentPage,
-            pageSize,
-            resultTotalCount,
-            result
-                .Select(p => _mapper.Map<ResponsePersonModel>(p))
-                .ToArray()
-        ));
+        return Ok(result);
     }
 
     [HttpGet]
@@ -178,27 +163,9 @@ public class PersonsController : ControllerBase
         if (!(birthDateFrom.HasValue && birthDateTo.HasValue || !birthDateFrom.HasValue && !birthDateTo.HasValue))
             return new BadRequestObjectResult(_errorLocalizer.GetLocalized(ErrorResources.DateRangeNotSelected));
 
-        var (result, resultTotalCount) = _personService.Search(keyword, birthDateFrom, birthDateTo, currentPage, pageSize);
+        var result = await _mediator.Send(new SearchQuery(
+            new RequestSearchModel(keyword, birthDateFrom, birthDateTo, currentPage, pageSize)));
 
-        return Ok(new ResponseSearchModel(
-            currentPage,
-            pageSize,
-            resultTotalCount,
-            result
-                .Select(p => _mapper.Map<ResponsePersonModel>(p))
-                .ToArray()
-        ));
+        return Ok(result);
     }
-
-    #region Private helper methods
-
-    private static async Task<byte[]> GetPhotoData(Person person)
-    {
-        if (string.IsNullOrEmpty(person.PhotoPath) || !System.IO.File.Exists(person.PhotoPath))
-            return Array.Empty<byte>();
-
-        return await System.IO.File.ReadAllBytesAsync(person.PhotoPath);
-    }
-
-    #endregion
 }
