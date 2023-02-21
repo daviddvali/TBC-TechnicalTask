@@ -1,27 +1,28 @@
 ﻿using AutoMapper;
 using MediatR;
-using TBC.Task.API.Mediator.Commands;
+using TBC.Task.API.Mediator.Requests.Commands;
 using TBC.Task.API.Models;
 using TBC.Task.Domain;
 using TBC.Task.Service.Interfaces.Services;
 
-namespace TBC.Task.API.Mediator.Handlers;
+namespace TBC.Task.API.Mediator.Handlers.Commands;
 
-public sealed class UpdatePersonCommandHandler : IRequestHandler<UpdatePersonCommand, RequestPersonModel>
+public sealed class CreatePersonCommandHandler : IRequestHandler<CreatePersonCommand, RequestPersonModel>
 {
     private readonly IPersonService _personService;
     private readonly IMapper _mapper;
 
-    public UpdatePersonCommandHandler(IPersonService personService, IMapper mapper)
+    public CreatePersonCommandHandler(IPersonService personService, IMapper mapper)
     {
         _personService = personService ?? throw new ArgumentNullException(nameof(personService));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
-    public async Task<RequestPersonModel> Handle(UpdatePersonCommand request, CancellationToken cancellationToken)
+    public async Task<RequestPersonModel> Handle(CreatePersonCommand request, CancellationToken cancellationToken)
     {
         var person = _mapper.Map<Person>(request.Model);
-        _personService.Update(person);
+        person.Id = 0;
+        _personService.Insert(person);
 
         return _mapper.Map<RequestPersonModel>(person);
     }

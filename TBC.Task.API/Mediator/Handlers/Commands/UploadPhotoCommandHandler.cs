@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using TBC.Task.API.Mediator.Commands;
+using TBC.Task.API.Mediator.Requests.Commands;
 using TBC.Task.Service.Interfaces.Services;
 
-namespace TBC.Task.API.Mediator.Handlers;
+namespace TBC.Task.API.Mediator.Handlers.Commands;
 
 public sealed class UploadPhotoCommandHandler : IRequestHandler<UploadPhotoCommand, int>
 {
@@ -41,7 +41,7 @@ public sealed class UploadPhotoCommandHandler : IRequestHandler<UploadPhotoComma
         using var stream = file.OpenReadStream();
         stream.Seek(0, SeekOrigin.Begin);
 
-        using var fileStream = System.IO.File.Create(Path.Combine(imageFilePath));
+        using var fileStream = File.Create(Path.Combine(imageFilePath));
         stream.CopyTo(fileStream);
         fileStream.Flush();
 

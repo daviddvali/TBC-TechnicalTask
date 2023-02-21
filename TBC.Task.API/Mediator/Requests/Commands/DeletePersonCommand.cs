@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace TBC.Task.API.Mediator.Commands;
+namespace TBC.Task.API.Mediator.Requests.Commands;
 
 public sealed class DeletePersonCommand : IRequest<int>
 {

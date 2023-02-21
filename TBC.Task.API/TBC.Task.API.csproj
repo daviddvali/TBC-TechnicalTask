@@ -28,7 +28,6 @@
 
   <ItemGroup>
     <Folder Include="Logs\" />
-    <Folder Include="Mediator\Queries\" />
     <Folder Include="Uploads\Photos\" />
   </ItemGroup>
 

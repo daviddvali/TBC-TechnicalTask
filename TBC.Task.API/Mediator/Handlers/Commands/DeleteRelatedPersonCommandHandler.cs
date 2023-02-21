@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using TBC.Task.API.Mediator.Commands;
+using TBC.Task.API.Mediator.Requests.Commands;
 using TBC.Task.API.Models;
 using TBC.Task.Service.Interfaces.Services;
 
-namespace TBC.Task.API.Mediator.Handlers;
+namespace TBC.Task.API.Mediator.Handlers.Commands;
 
 public sealed class DeleteRelatedPersonCommandHandler : IRequestHandler<CreateRelatedPersonCommand, RequestRelatedPersonModel>
 {

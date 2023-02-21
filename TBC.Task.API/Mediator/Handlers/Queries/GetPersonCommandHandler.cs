@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
-using TBC.Task.API.Mediator.Commands;
+using TBC.Task.API.Mediator.Requests.Queries;
 using TBC.Task.API.Models;
 using TBC.Task.Service.Interfaces.Services;
 
-namespace TBC.Task.API.Mediator.Handlers;
+namespace TBC.Task.API.Mediator.Handlers.Queries;
 
 public sealed class GetPersonCommandHandler : IRequestHandler<GetPersonQuery, ResponsePersonWithRelatedModel>
 {

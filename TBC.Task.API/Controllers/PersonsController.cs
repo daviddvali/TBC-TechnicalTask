@@ -3,10 +3,10 @@ using Microsoft.Extensions.Localization;
 using AutoMapper;
 using MediatR;
 using TBC.Task.API.Localization;
-using TBC.Task.API.Mediator.Commands;
+using TBC.Task.API.Mediator.Requests.Commands;
+using TBC.Task.API.Mediator.Requests.Queries;
 using TBC.Task.API.Models;
 using TBC.Task.API.Resources;
-using TBC.Task.Domain;
 using TBC.Task.Service.Interfaces.Services;
 
 namespace TBC.Task.API.Controllers;

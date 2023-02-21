@@ -1,11 +1,9 @@
-﻿using AutoMapper;
-using MediatR;
-using TBC.Task.API.Mediator.Commands;
-using TBC.Task.API.Models;
+﻿using MediatR;
+using TBC.Task.API.Mediator.Requests.Queries;
 using TBC.Task.Domain;
 using TBC.Task.Service.Interfaces.Services;
 
-namespace TBC.Task.API.Mediator.Handlers;
+namespace TBC.Task.API.Mediator.Handlers.Queries;
 
 public sealed class GetPhotoCommandHandler : IRequestHandler<GetPhotoQuery, byte[]>
 {
@@ -24,9 +22,9 @@ public sealed class GetPhotoCommandHandler : IRequestHandler<GetPhotoQuery, byte
 
     private static async Task<byte[]> GetPhotoData(Person person)
     {
-        if (string.IsNullOrEmpty(person.PhotoPath) || !System.IO.File.Exists(person.PhotoPath))
+        if (string.IsNullOrEmpty(person.PhotoPath) || !File.Exists(person.PhotoPath))
             return Array.Empty<byte>();
 
-        return await System.IO.File.ReadAllBytesAsync(person.PhotoPath);
+        return await File.ReadAllBytesAsync(person.PhotoPath);
     }
 }

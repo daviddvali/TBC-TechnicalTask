@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using TBC.Task.API.Models;
 
-namespace TBC.Task.API.Mediator.Commands;
+namespace TBC.Task.API.Mediator.Requests.Queries;
 
 public sealed class GetPersonQuery : IRequest<ResponsePersonWithRelatedModel>
 {
