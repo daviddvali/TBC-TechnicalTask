@@ -20,7 +20,10 @@ public sealed class UpdatePersonCommandHandler : IRequestHandler<UpdatePersonCom
 
     public async Task<RequestPersonModel> Handle(UpdatePersonCommand request, CancellationToken cancellationToken)
     {
-        var person = _mapper.Map<Person>(request.Model);
+	    if (!_personService.Exists(request.Model.Id!.Value))
+		    throw new KeyNotFoundException(request.Model.Id!.Value.ToString());
+
+		var person = _mapper.Map<Person>(request.Model);
         _personService.Update(person);
 
         return _mapper.Map<RequestPersonModel>(person);

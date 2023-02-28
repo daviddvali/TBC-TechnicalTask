@@ -15,7 +15,10 @@ public sealed class CreateRelatedPersonCommandHandler : IRequestHandler<CreateRe
 
     public async Task<RequestRelatedPersonModel> Handle(CreateRelatedPersonCommand request, CancellationToken cancellationToken)
     {
-        var relatedPerson = new RelatedPerson { FromId = request.Model.FromId, ToId = request.Model.ToId };
+	    if (_relatedPersonService.Exists(request.Model.FromId, request.Model.ToId))
+		    return new RequestRelatedPersonModel(request.Model.FromId, request.Model.ToId);
+
+		var relatedPerson = new RelatedPerson { FromId = request.Model.FromId, ToId = request.Model.ToId };
         _relatedPersonService.Insert(relatedPerson);
 
         return new RequestRelatedPersonModel(relatedPerson.FromId, relatedPerson.ToId);

@@ -13,7 +13,10 @@ public sealed class DeletePersonCommandHandler : IRequestHandler<DeletePersonCom
 
     public async Task<int> Handle(DeletePersonCommand request, CancellationToken cancellationToken)
     {
-        var person = _personService.Get(request.Id);
+	    if (!_personService.Exists(request.Id))
+		    throw new KeyNotFoundException(request.Id.ToString());
+
+		var person = _personService.Get(request.Id);
         _personService.Delete(person);
 
         return request.Id;

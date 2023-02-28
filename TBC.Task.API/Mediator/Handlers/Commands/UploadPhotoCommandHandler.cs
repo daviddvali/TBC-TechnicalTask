@@ -19,7 +19,10 @@ public sealed class UploadPhotoCommandHandler : IRequestHandler<UploadPhotoComma
 
     public async Task<int> Handle(UploadPhotoCommand request, CancellationToken cancellationToken)
     {
-        var person = _personService.Get(request.Model.Id);
+	    if (!_personService.Exists(request.Model.Id))
+		    throw new KeyNotFoundException(request.Model.Id.ToString());
+
+		var person = _personService.Get(request.Model.Id);
         var imageFilePath = SavePhoto(request.Model.Id, request.Model.File);
 
         person.PhotoPath = imageFilePath;

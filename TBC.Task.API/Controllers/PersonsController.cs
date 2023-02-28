@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using AutoMapper;
 using MediatR;
+using Polly;
+using TBC.Task.API.Extensions;
 using TBC.Task.API.Localization;
 using TBC.Task.API.Mediator.Requests.Commands;
 using TBC.Task.API.Mediator.Requests.Queries;
 using TBC.Task.API.Models;
 using TBC.Task.API.Resources;
-using TBC.Task.Service.Interfaces.Services;
 
 namespace TBC.Task.API.Controllers;
 
@@ -15,158 +15,139 @@ namespace TBC.Task.API.Controllers;
 [Route("[controller]")]
 public class PersonsController : ControllerBase
 {
-    private readonly IPersonService _personService;
-    private readonly IRelatedPersonService _relatedPersonService;
-    private readonly IStringLocalizer<ErrorResources> _errorLocalizer;
-    private readonly IMapper _mapper;
-    private readonly IMediator _mediator;
+	private readonly IMediator _mediator;
+	private readonly IStringLocalizer<ErrorResources> _errorLocalizer;
 
-    public PersonsController(
-        IPersonService personService,
-        IRelatedPersonService relatedPersonService,
-        IStringLocalizer<ErrorResources> errorLocalizer,
-        IMapper mapper,
-        IMediator mediator)
-    {
-        _personService = personService ?? throw new ArgumentNullException(nameof(personService));
-        _relatedPersonService = relatedPersonService ?? throw new ArgumentNullException(nameof(relatedPersonService));
-        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        _errorLocalizer = errorLocalizer ?? throw new ArgumentNullException(nameof(errorLocalizer));
-        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-    }
+	public PersonsController(IMediator mediator, IStringLocalizer<ErrorResources> errorLocalizer)
+	{
+		_mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+		_errorLocalizer = errorLocalizer ?? throw new ArgumentNullException(nameof(errorLocalizer));
+	}
 
-    [HttpPost]
-    public async Task<IActionResult> Create(RequestPersonModel model)
-    {
-        var personModel = await _mediator.Send(new CreatePersonCommand(model));
+	internal IStringLocalizer<ErrorResources> ErrorLocalizer => _errorLocalizer;
 
-        return Ok(new { id = personModel.Id });
-    }
+	#region Person CRUD Actions
 
-    [HttpPut]
-    public async Task<IActionResult> Update(int id, RequestPersonModel model)
-    {
-        if (!_personService.Exists(id))
-            return NotFound(_errorLocalizer.GetLocalized(ErrorResources.PersonNotFound));
+	[HttpPost]
+	public async Task<IActionResult> Create(RequestPersonModel model) =>
+		this.GetPersonPolicy().Execute(() =>
+		{
+			var id = _mediator.Send(new CreatePersonCommand(model)).Result.Id;
+			return Ok(new { id });
+		});
 
-        model.Id = id;
-        await _mediator.Send(new UpdatePersonCommand(model));
+	[HttpPut]
+	public async Task<IActionResult> Update(int id, RequestPersonModel model) =>
+		this.GetPersonPolicy().Execute(() =>
+		{
+			model.Id = id;
+			var _ = _mediator.Send(new UpdatePersonCommand(model)).Result;
+			return NoContent();
+		});
 
-        return NoContent();
-    }
+	[HttpPatch]
+	[Route("UploadPhoto")]
+	public async Task<IActionResult> UploadPhoto(int id, IFormFile file) =>
+		this.GetPersonPolicy().Execute(() =>
+		{
+			if (file.Length == 0)
+				return BadRequest();
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        if (!_personService.Exists(id))
-            return NotFound(_errorLocalizer.GetLocalized(ErrorResources.PersonNotFound));
+			var _ = _mediator.Send(new UploadPhotoCommand(new RequestUploadPhotoModel(id, file))).Result;
 
-        await _mediator.Send(new DeletePersonCommand(id));
+			return Ok(new
+			{
+				id,
+				photoSize = file.Length
+			});
+		});
 
-        return NoContent();
-    }
+	[HttpDelete("{id:int}")]
+	public async Task<IActionResult> Delete(int id) =>
+		this.GetPersonPolicy().Execute(() =>
+		{
+			var _ = _mediator.Send(new DeletePersonCommand(id)).Result;
+			return NoContent();
+		});
 
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> Get(int id)
-    {
-        if (!_personService.Exists(id))
-            return NotFound(_errorLocalizer.GetLocalized(ErrorResources.PersonNotFound));
+	#endregion
 
-        var person = await _mediator.Send(new GetPersonQuery(id));
+	#region Related Person CRUD Actions
 
-        return Ok(person);
-    }
+	[HttpPost]
+	[Route("AddRelatedPerson/{from:int}/{to:int}")]
+	public async Task<IActionResult> AddRelatedPerson(int from, int to) =>
+		this.GetRelatedPersonPolicy().Execute(() =>
+		{
+			var _ = _mediator.Send(new CreateRelatedPersonCommand(new RequestRelatedPersonModel(from, to))).Result;
+			return Ok();
+		});
 
-    [HttpPost]
-    [Route("AddRelatedPerson/{from:int}/{to:int}")]
-    public async Task<IActionResult> AddRelatedPerson(int from, int to)
-    {
-        if (_relatedPersonService.Exists(from, to))
-            return Ok();
+	[HttpDelete]
+	[Route("DeleteRelatedPerson/{from:int}/{to:int}")]
+	public async Task<IActionResult> DeleteRelatedPerson(int from, int to) =>
+		this.GetRelatedPersonPolicy().Execute(() =>
+		{
+			var _ = _mediator.Send(new DeleteRelatedPersonCommand(new RequestRelatedPersonModel(from, to))).Result;
+			return NoContent();
+		});
 
-        await _mediator.Send(new CreateRelatedPersonCommand(new RequestRelatedPersonModel(from, to)));
+	[HttpGet]
+	[Route("RelatedPersonsCount/{id:int}")]
+	public async Task<IActionResult> GetRelatedPersonsCount(int id) =>
+		this.GetRelatedPersonPolicy().Execute(() =>
+		{
+			var count = _mediator.Send(new GetRelatedPersonsCountQuery(id)).Result;
+			return Ok(new { relatedPersonsCount = count });
+		});
 
-        return Ok();
-    }
+	#endregion
 
-    [HttpDelete]
-    [Route("DeleteRelatedPerson/{from:int}/{to:int}")]
-    public async Task<IActionResult> DeleteRelatedPerson(int from, int to)
-    {
-        if (!_relatedPersonService.Exists(from, to))
-            return NotFound(_errorLocalizer.GetLocalized(ErrorResources.RelationNotFound));
+	#region Person Query Actions
 
-        await _mediator.Send(new DeleteRelatedPersonCommand(new RequestRelatedPersonModel(from, to)));
+	[HttpGet("{id:int}")]
+	public async Task<IActionResult> Get(int id) => Policy<IActionResult>
+		.Handle<AggregateException>(_ => _.InnerException is KeyNotFoundException)
+		.Fallback(_ => NotFound(_errorLocalizer.GetLocalized(ErrorResources.PersonNotFound)))
+		.Execute(() => Ok(_mediator.Send(new GetPersonQuery(id)).Result));
 
-        return NoContent();
-    }
+	[HttpGet]
+	[Route("Photo/{id:int}")]
+	public async Task<IActionResult> GetPhoto(int id) =>
+		this.GetPersonPolicy().Execute(() =>
+		{
+			var data = _mediator.Send(new GetPhotoQuery(id)).Result;
 
-    [HttpGet]
-    [Route("RelatedPersonsCount/{id:int}")]
-    public async Task<IActionResult> GetRelatedPersonsCount(int id)
-    {
-        if (!_personService.Exists(id))
-            return NotFound(_errorLocalizer.GetLocalized(ErrorResources.PersonNotFound));
+			if (!data.Any())
+				return NotFound();
 
-        var count = await _mediator.Send(new GetRelatedPersonsCountQuery(id));
+			return File(data, "image/jpeg");
+		});
 
-        return Ok(new { relatedPersonsCount = count });
-    }
+	[HttpGet]
+	[Route("QuickSearch/{keyword}/{currentPage:int}/{pageSize:int?}")]
+	public async Task<IActionResult> QuickSearch(string keyword, int currentPage = 1, int pageSize = 100) =>
+		this.GetQueryPolicy().Execute(() =>
+		{
+			var result = _mediator.Send(new QuickSearchQuery(
+				new RequestQuickSearchModel(keyword, currentPage, pageSize))).Result;
 
-    [HttpPatch]
-    [Route("UploadPhoto")]
-    public async Task<IActionResult> UploadPhoto(int id, IFormFile file)
-    {
-        if (!_personService.Exists(id))
-            return NotFound(_errorLocalizer.GetLocalized(ErrorResources.PersonNotFound));
-        if (file.Length == 0)
-            return BadRequest();
+			return Ok(result);
+		});
 
-        await _mediator.Send(new UploadPhotoCommand(new RequestUploadPhotoModel(id, file)));
+	[HttpGet]
+	[Route("Search/{keyword}/{currentPage:int?}/{pageSize:int?}")]
+	public async Task<IActionResult> Search(string keyword, DateTime? birthDateFrom = null, DateTime? birthDateTo = null, int currentPage = 1, int pageSize = 100) =>
+		this.GetQueryPolicy().Execute(() =>
+		{
+			if (!(birthDateFrom.HasValue && birthDateTo.HasValue || !birthDateFrom.HasValue && !birthDateTo.HasValue))
+				return new BadRequestObjectResult(_errorLocalizer.GetLocalized(ErrorResources.DateRangeNotSelected));
 
-        return Ok(new
-        {
-            id,
-            photoSize = file.Length
-        });
-    }
+			var result = _mediator.Send(new SearchQuery(
+				new RequestSearchModel(keyword, birthDateFrom, birthDateTo, currentPage, pageSize))).Result;
 
-    [HttpGet]
-    [Route("Photo/{id:int}")]
-    public async Task<IActionResult> GetPhoto(int id)
-    {
-        if (!_personService.Exists(id))
-            return NotFound(_errorLocalizer.GetLocalized(ErrorResources.PersonNotFound));
+			return Ok(result);
+		});
 
-        var data = await _mediator.Send(new GetPhotoQuery(id));
-
-        if (!data.Any())
-            return NotFound();
-
-        return File(data, "image/jpeg");
-    }
-
-    [HttpGet]
-    [Route("QuickSearch/{keyword}/{currentPage:int}/{pageSize:int?}")]
-    public async Task<IActionResult> QuickSearch(string keyword, int currentPage = 1, int pageSize = 100)
-    {
-        var result = await _mediator.Send(new QuickSearchQuery(
-            new RequestQuickSearchModel(keyword, currentPage, pageSize)));
-
-        return Ok(result);
-    }
-
-    [HttpGet]
-    [Route("Search/{keyword}/{currentPage:int?}/{pageSize:int?}")]
-    public async Task<IActionResult> Search(
-        string keyword, DateTime? birthDateFrom = null, DateTime? birthDateTo = null, int currentPage = 1, int pageSize = 100)
-    {
-        if (!(birthDateFrom.HasValue && birthDateTo.HasValue || !birthDateFrom.HasValue && !birthDateTo.HasValue))
-            return new BadRequestObjectResult(_errorLocalizer.GetLocalized(ErrorResources.DateRangeNotSelected));
-
-        var result = await _mediator.Send(new SearchQuery(
-            new RequestSearchModel(keyword, birthDateFrom, birthDateTo, currentPage, pageSize)));
-
-        return Ok(result);
-    }
+	#endregion
 }

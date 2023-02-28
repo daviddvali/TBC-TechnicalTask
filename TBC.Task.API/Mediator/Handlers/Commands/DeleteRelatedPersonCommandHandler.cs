@@ -7,15 +7,18 @@ namespace TBC.Task.API.Mediator.Handlers.Commands;
 
 public sealed class DeleteRelatedPersonCommandHandler : IRequestHandler<DeleteRelatedPersonCommand, RequestRelatedPersonModel>
 {
-    private readonly IRelatedPersonService _relatedPersonService;
+	private readonly IRelatedPersonService _relatedPersonService;
 
-    public DeleteRelatedPersonCommandHandler(IRelatedPersonService relatedPersonService) =>
-        _relatedPersonService = relatedPersonService ?? throw new ArgumentNullException(nameof(relatedPersonService));
+	public DeleteRelatedPersonCommandHandler(IRelatedPersonService relatedPersonService) =>
+		_relatedPersonService = relatedPersonService ?? throw new ArgumentNullException(nameof(relatedPersonService));
 
-    public async Task<RequestRelatedPersonModel> Handle(DeleteRelatedPersonCommand request, CancellationToken cancellationToken)
-    {
-        _relatedPersonService.Delete(request.Model.FromId, request.Model.ToId);
+	public async Task<RequestRelatedPersonModel> Handle(DeleteRelatedPersonCommand request, CancellationToken cancellationToken)
+	{
+		if (!_relatedPersonService.Exists(request.Model.FromId, request.Model.ToId))
+			throw new KeyNotFoundException(new { request.Model.FromId, request.Model.ToId }.ToString());
+		
+		_relatedPersonService.Delete(request.Model.FromId, request.Model.ToId);
 
-        return new RequestRelatedPersonModel(request.Model.FromId, request.Model.ToId);
-    }
+		return new RequestRelatedPersonModel(request.Model.FromId, request.Model.ToId);
+	}
 }

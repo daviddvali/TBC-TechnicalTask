@@ -21,7 +21,10 @@ public sealed class GetPersonCommandHandler : IRequestHandler<GetPersonQuery, Re
 
     public async Task<ResponsePersonWithRelatedModel> Handle(GetPersonQuery request, CancellationToken cancellationToken)
     {
-        var person = BuildGetResponse(request.Id);
+	    if (!_personService.Exists(request.Id))
+		    throw new KeyNotFoundException(request.Id.ToString());
+
+		var person = BuildGetResponse(request.Id);
 
         return person!;
     }
